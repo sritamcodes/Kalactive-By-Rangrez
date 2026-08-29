@@ -483,7 +483,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
       <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="index.php">SHOP</a>
       <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="index.php">COLLECTIONS</a>
       <a class="text-secondary border-b border-secondary font-label-lg text-label-lg uppercase tracking-widest opacity-80" href="rooms.php">ROOMS</a>
-      <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="#">OUR STORY</a>
+      <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="story.php">OUR STORY</a>
     </div>
     <a class="font-headline-lg text-headline-lg tracking-tighter text-primary" href="index.php">कला'ctive</a>
     <div class="flex items-center space-x-6">
