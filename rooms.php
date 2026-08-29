@@ -772,11 +772,11 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
     <div class="flex flex-col space-y-4">
       <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="index.php">SHOP</a>
       <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="products.php">COLLECTIONS</a>
-      <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="#">OUR STORY</a>
+      <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="story.php">OUR STORY</a>
     </div>
     <div class="flex flex-col space-y-4">
-      <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="#">HELP</a>
-      <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="#">CONTACT</a>
+      <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="help.php">HELP</a>
+      <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="help.php">CONTACT</a>
     </div>
     <div class="col-span-2 md:col-span-2">
       <p class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-4">JOIN THE NARRATIVE</p><br>

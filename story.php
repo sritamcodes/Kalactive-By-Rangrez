@@ -787,15 +787,15 @@ $pageTitle = "Our Story — KALACTIVE";
 
                     <div class="space-y-3 text-sm text-white/70">
 
-                        <a href="#" class="block hover:text-white transition">
+                        <a href="help.php" class="block hover:text-white transition">
                             Contact
                         </a>
 
-                        <a href="#" class="block hover:text-white transition">
+                        <a href="help.php" class="block hover:text-white transition">
                             Shipping
                         </a>
 
-                        <a href="#" class="block hover:text-white transition">
+                        <a href="help.php" class="block hover:text-white transition">
                             Returns
                         </a>
 

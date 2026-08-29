@@ -372,9 +372,9 @@ $featuredProducts = featured_products(4);
             </div>
             <div class="flex flex-col space-y-4">
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
-                    href="#">HELP</a>
+                    href="help.php">HELP</a>
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
-                    href="#">CONTACT</a>
+                    href="help.php">CONTACT</a>
             </div>
             <div class="col-span-2 md:col-span-2">
                 <p class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-4">JOIN THE NARRATIVE
