@@ -14,53 +14,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Products | Admin</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .admin-layout {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: 100vh;
-        }
-        .sidebar {
-            background: #0f172a;
-            color: #fff;
-            padding: 24px 16px;
-        }
-        .sidebar a {
-            color: #94a3b8;
-            display: block;
-            padding: 12px 16px;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            transition: var(--transition);
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background: #1e293b;
-            color: #fff;
-        }
-        .main-content {
-            padding: 30px;
-            background: #f8fafc;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: var(--radius);
-            overflow: hidden;
-            border: 1px solid var(--border);
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 14px 18px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        th {
-            background: #f1f5f9;
-            font-weight: 600;
-        }
-    </style>
+    <link rel="stylesheet" href="admin-style.css">
+    
 </head>
 <body>
     <div class="admin-layout">
@@ -121,3 +76,5 @@ if (!isset($_SESSION['admin_logged_in'])) {
     </div>
 </body>
 </html>
+
+

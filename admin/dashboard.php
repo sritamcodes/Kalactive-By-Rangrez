@@ -14,47 +14,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .admin-layout {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: 100vh;
-        }
-        .sidebar {
-            background: #0f172a;
-            color: #fff;
-            padding: 24px 16px;
-        }
-        .sidebar a {
-            color: #94a3b8;
-            display: block;
-            padding: 12px 16px;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            transition: var(--transition);
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background: #1e293b;
-            color: #fff;
-        }
-        .main-content {
-            padding: 30px;
-            background: #f8fafc;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-top: 24px;
-        }
-        .stat-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-        }
-    </style>
+    <link rel="stylesheet" href="admin-style.css">
+    
 </head>
 <body>
     <div class="admin-layout">
@@ -70,8 +31,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
         </aside>
 
         <section class="main-content">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h1 style="font-size: 1.8rem;">Dashboard Overview</h1>
+            <div class="dashboard-header">
+                <h1>Dashboard Overview</h1>
                 <span style="color: var(--text-muted);">Welcome, <?= htmlspecialchars($_SESSION['admin_user'] ?? 'Admin') ?></span>
             </div>
 
@@ -97,3 +58,6 @@ if (!isset($_SESSION['admin_logged_in'])) {
     </div>
 </body>
 </html>
+
+
+

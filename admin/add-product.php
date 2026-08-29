@@ -28,35 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product | Admin</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .admin-layout {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: 100vh;
-        }
-        .sidebar {
-            background: #0f172a;
-            color: #fff;
-            padding: 24px 16px;
-        }
-        .sidebar a {
-            color: #94a3b8;
-            display: block;
-            padding: 12px 16px;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            transition: var(--transition);
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background: #1e293b;
-            color: #fff;
-        }
-        .main-content {
-            padding: 30px;
-            background: #f8fafc;
-        }
-    </style>
+    <link rel="stylesheet" href="admin-style.css">
+    
 </head>
 <body>
     <div class="admin-layout">
@@ -72,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </aside>
 
         <section class="main-content">
-            <h1 style="font-size: 1.8rem; margin-bottom: 20px;">Add New Product</h1>
+            <h1>Add New Product</h1>
 
             <?php if ($message): ?>
                 <div style="background: #dcfce7; color: var(--success); padding: 12px; border-radius: 6px; margin-bottom: 20px;">
@@ -116,3 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+
+
+

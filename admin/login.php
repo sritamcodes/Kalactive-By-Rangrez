@@ -26,9 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal Login</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="admin-style.css">
 </head>
-<body style="background: #0f172a; display: flex; align-items: center; justify-content: center; min-height: 100vh;">
-    <div style="background: #ffffff; padding: 40px; border-radius: var(--radius); width: 100%; max-width: 420px; box-shadow: var(--shadow-lg);">
+<body class="login-body">
+    <div class="login-card">
         <h1 style="font-size: 1.6rem; color: #0f172a; margin-bottom: 8px; text-align: center;">⚙️ Admin Panel</h1>
         <p style="color: var(--text-muted); text-align: center; margin-bottom: 24px; font-size: 0.95rem;">Enter credentials to access administration</p>
 
@@ -54,3 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+
+
+

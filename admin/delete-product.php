@@ -18,3 +18,5 @@ if ($productId > 0) {
 header("Location: products.php?deleted=1");
 exit;
 ?>
+
+
