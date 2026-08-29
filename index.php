@@ -128,13 +128,13 @@
             class="max-w-[1440px] mx-auto w-full px-margin-mobile md:px-margin-desktop py-4 flex items-center justify-between">
             <div class="hidden md:flex items-center space-x-8">
                 <a class="text-secondary border-b border-secondary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300 opacity-80"
-                    href="#">SHOP</a>
+                    href="./products.php">SHOP</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
-                    href="#">COLLECTIONS</a>
+                    href="products.php">COLLECTIONS</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
                     href="rooms.php">ROOMS</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
-                    href="#">OUR STORY</a>
+                    href="index.php#our-story">OUR STORY</a>
             </div>
             <a class="font-headline-lg text-headline-lg tracking-tighter text-primary" href="#">कला'ctive</a>
             <div class="flex items-center space-x-6">
