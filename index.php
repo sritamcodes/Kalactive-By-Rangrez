@@ -130,11 +130,11 @@
                 <a class="text-secondary border-b border-secondary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300 opacity-80"
                     href="#">SHOP</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
-                    href="#">COLLECTIONS</a>
+                    href="./admin/products.php">COLLECTIONS</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
                     href="rooms.php">ROOMS</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
-                    href="#">OUR STORY</a>
+                    href="story.php">OUR STORY</a>
             </div>
             <a class="font-headline-lg text-headline-lg tracking-tighter text-primary" href="#">कला'ctive</a>
             <div class="flex items-center space-x-6">
@@ -283,7 +283,7 @@
                             <img alt="Ceramic Objects"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                 data-alt="A curated arrangement of small, tactile ceramic objects"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWp4mSba07Vk46zA5Ixpen70m-URW4ZydPQrWVrC2TZmDodufBUDG81rv0SrR8pOEqzncLSExsFpU8vRhOCd7E_2Y73r3i7TLaJIX611ofOHY2dZP3-9UpWBT6CX4bCXKMK-yPJLVEoe4ezexvWAVIDlmq67kcKzVJzzYmF-qFcAzeifuZdtvDDw6lZb4aa6BAywqN8yKeZAGyxQ8D6QTxPMuBpYRicltC0sMMFdo97Fs_AU9omIs">
+                                src="https://lh3git Vk46zA5Ixpen70m-URW4ZydPQrWVrC2TZmDodufBUDG81rv0SrR8pOEqzncLSExsFpU8vRhOCd7E_2Y73r3i7TLaJIX611ofOHY2dZP3-9UpWBT6CX4bCXKMK-yPJLVEoe4ezexvWAVIDlmq67kcKzVJzzYmF-qFcAzeifuZdtvDDw6lZb4aa6BAywqN8yKeZAGyxQ8D6QTxPMuBpYRicltC0sMMFdo97Fs_AU9omIs">
                             <span
                                 class="absolute top-2 right-2 border border-outline bg-background/90 backdrop-blur px-2 py-1 font-label-sm text-label-sm uppercase text-primary">LIMITED</span>
                             <div
