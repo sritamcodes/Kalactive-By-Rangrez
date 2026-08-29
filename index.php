@@ -138,14 +138,14 @@
             </div>
             <a class="font-headline-lg text-headline-lg tracking-tighter text-primary" href="#">कला'ctive</a>
             <div class="flex items-center space-x-6">
-                <button class="text-primary hover:text-secondary transition-colors"><span
-                        class="material-symbols-outlined">favorite</span></button>
-                <button class="text-primary hover:text-secondary transition-colors"><span
-                        class="material-symbols-outlined">shopping_bag</span></button>
-                <button class="text-primary hover:text-secondary transition-colors"><span
-                        class="material-symbols-outlined">person</span></button>
-                <button class="md:hidden text-primary hover:text-secondary transition-colors"><span
-                        class="material-symbols-outlined">menu</span></button>
+                <a href="./admin/add-product.php"<button class="text-primary hover:text-secondary transition-colors"><span
+                        class="material-symbols-outlined">favorite</span></button></a>
+                <a href="./admin/edit-product.php"><button class="text-primary hover:text-secondary transition-colors"><span
+                        class="material-symbols-outlined">shopping_bag</span></button></a>
+                <a href="./admin/login.php"><button class="text-primary hover:text-secondary transition-colors"><span
+                        class="material-symbols-outlined">person</span></button></a>
+                <a href="./admin/dashboard.php"><button class="md:hidden text-primary hover:text-secondary transition-colors"><span
+                        class="material-symbols-outlined">menu</span></button></a>
             </div>
         </div>
     </nav>
