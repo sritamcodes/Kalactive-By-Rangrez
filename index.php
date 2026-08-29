@@ -132,7 +132,7 @@
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
                     href="#">COLLECTIONS</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
-                    href="#">ROOMS</a>
+                    href="rooms.php">ROOMS</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
                     href="#">OUR STORY</a>
             </div>
