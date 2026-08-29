@@ -393,8 +393,7 @@ $pageTitle = "Our Story — KALACTIVE";
                     <div class="aspect-[4/5] overflow-hidden bg-[#dfd3c0]">
 
                         <img
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMM2mFaKz_BV67YxjoU34SN5nLpkHIAhFpOQ_gMZpEzw&s=10"
-                            alt="Traditional Indian craftsmanship"
+                            src="https://i.pinimg.com/1200x/65/14/f6/6514f67894a8a6aad46d4fe5270065cc.jpg"
                             class="story-image w-full h-full object-cover"
                             onerror="this.src='images/banners/story-hero.jpg';"
                         >
@@ -495,7 +494,7 @@ $pageTitle = "Our Story — KALACTIVE";
                         <div class="aspect-[4/5] overflow-hidden bg-[#ddcfbb]">
 
                             <img
-                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn6xpRprjwJtCPZlOtTS2z4JFC4lsV3-zOZEajPaG7kA&s=10"
+                                src="https://i.pinimg.com/736x/11/95/e1/1195e18c92b3103ca49277fdae350c7f.jpg"
                                 alt="Contemporary Indian home interior"
                                 class="story-image w-full h-full object-cover"
                                 onerror="this.src='images/banners/story-hero.jpg';"
@@ -711,7 +710,7 @@ $pageTitle = "Our Story — KALACTIVE";
                     </div>
 
                     <a
-                        href="./admin/products.php"
+                        href="products.php"
                         class="inline-flex items-center gap-4 border border-white/60 px-8 py-4 uppercase text-xs tracking-[0.2em] hover:bg-white hover:text-[#974724] transition-all duration-300"
                     >
                         Shop the collection

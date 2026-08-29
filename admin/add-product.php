@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../includes/product-functions.php';
+require_once __DIR__ . '/../includes/session.php';
 session_start();
 
 if (!isset($_SESSION['admin_logged_in'])) {
@@ -8,17 +9,26 @@ if (!isset($_SESSION['admin_logged_in'])) {
 }
 
 $message = '';
+$categories = all_categories();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
-    $price = trim($_POST['price'] ?? '');
-    $stock = trim($_POST['stock'] ?? '');
+    $price = (float) ($_POST['price'] ?? 0);
+    $stock = (int) ($_POST['stock'] ?? 0);
     $description = trim($_POST['description'] ?? '');
+    $categoryId = ($_POST['category_id'] ?? '') !== '' ? (int) $_POST['category_id'] : null;
+    $featured = isset($_POST['featured']) ? 1 : 0;
+    $image = trim($_POST['image_url'] ?? '');
+    $image = uploaded_product_image($image);
 
-    if (!empty($title) && !empty($price)) {
-        // Save product logic
-        $message = "Product added successfully!";
+    if ($title !== '' && $price > 0) {
+        $stmt = $conn->prepare("INSERT INTO products (category_id, title, slug, description, price, stock, image, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$categoryId, $title, unique_product_slug($title), $description, $price, $stock, $image, $featured]);
+        header("Location: products.php?created=1");
+        exit;
     }
+
+    $message = "Add a product title and price.";
 }
 ?>
 <!DOCTYPE html>
@@ -29,18 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Add Product | Admin</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="admin-style.css">
-    
 </head>
 <body>
     <div class="admin-layout">
         <aside class="sidebar">
-            <h2 style="font-size: 1.2rem; color: #fff; margin-bottom: 24px; padding-left: 12px;">⚙️ Admin Panel</h2>
+            <h2 style="font-size: 1.2rem; color: #fff; margin-bottom: 24px; padding-left: 12px;">Admin Panel</h2>
             <nav>
-                <a href="dashboard.php">📊 Dashboard</a>
-                <a href="products.php">📦 Products</a>
-                <a href="add-product.php" class="active">➕ Add Product</a>
-                <a href="../index.php" target="_blank">🌐 View Store</a>
-                <a href="login.php" style="color: #f87171; margin-top: 30px;">🚪 Logout</a>
+                <a href="dashboard.php">Dashboard</a>
+                <a href="products.php">Products</a>
+                <a href="add-product.php" class="active">Add Product</a>
+                <a href="../index.php" target="_blank">View Store</a>
+                <a href="login.php" style="color: #f87171; margin-top: 30px;">Logout</a>
             </nav>
         </aside>
 
@@ -48,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Add New Product</h1>
 
             <?php if ($message): ?>
-                <div style="background: #dcfce7; color: var(--success); padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+                <div style="background: #fee2e2; color: var(--danger); padding: 12px; border-radius: 6px; margin-bottom: 20px;">
                     <?= htmlspecialchars($message) ?>
                 </div>
             <?php endif; ?>
@@ -57,29 +66,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form action="add-product.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="title">Product Title</label>
-                        <input type="text" id="title" name="title" class="form-control" required placeholder="e.g. Wireless Noise Canceling Headphones">
+                        <input type="text" id="title" name="title" class="form-control" required placeholder="Hand-painted ceramic vase">
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <div class="form-group">
-                            <label for="price">Price ($)</label>
-                            <input type="number" step="0.01" id="price" name="price" class="form-control" required placeholder="99.99">
+                            <label for="price">Price (Rs.)</label>
+                            <input type="number" step="0.01" id="price" name="price" class="form-control" required placeholder="4500">
                         </div>
                         <div class="form-group">
                             <label for="stock">Stock Quantity</label>
-                            <input type="number" id="stock" name="stock" class="form-control" required placeholder="50">
+                            <input type="number" id="stock" name="stock" class="form-control" required placeholder="20">
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category_id">Category</label>
+                        <select id="category_id" name="category_id" class="form-control">
+                            <option value="">No category</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= (int) $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
                     <div class="form-group">
                         <label for="description">Product Description</label>
-                        <textarea id="description" name="description" rows="4" class="form-control" placeholder="Enter detailed product description..."></textarea>
+                        <textarea id="description" name="description" rows="4" class="form-control"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="image">Product Image</label>
+                        <label for="image_url">Image URL</label>
+                        <input type="url" id="image_url" name="image_url" class="form-control" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Upload Image</label>
                         <input type="file" id="image" name="image" class="form-control" accept="image/*">
                     </div>
+
+                    <label style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+                        <input type="checkbox" name="featured" value="1">
+                        Show on homepage
+                    </label>
 
                     <button type="submit" class="btn btn-primary" style="padding: 12px 24px;">Create Product</button>
                     <a href="products.php" class="btn btn-outline" style="margin-left: 8px;">Cancel</a>
@@ -89,6 +118,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
-
-
-

@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/includes/product-functions.php';
+$featuredProducts = featured_products(4);
+?>
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="en" style="">
 
@@ -130,7 +134,7 @@
                 <a class="text-secondary border-b border-secondary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300 opacity-80"
                     href="#">SHOP</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
-                    href="./admin/products.php">COLLECTIONS</a>
+                    href="products.php">COLLECTIONS</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
                     href="rooms.php">ROOMS</a>
                 <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300"
@@ -138,10 +142,10 @@
             </div>
             <a class="font-headline-lg text-headline-lg tracking-tighter text-primary" href="#">कला'ctive</a>
             <div class="flex items-center space-x-6">
-                <a href="./admin/add-product.php"<button class="text-primary hover:text-secondary transition-colors"><span
-                        class="material-symbols-outlined">favorite</span></button></a>
-                <a href="./admin/edit-product.php"><button class="text-primary hover:text-secondary transition-colors"><span
-                        class="material-symbols-outlined">shopping_bag</span></button></a>
+                <a href="products.php" class="text-primary hover:text-secondary transition-colors" aria-label="Browse collection"><span
+                        class="material-symbols-outlined">favorite</span></a>
+                <a href="cart.php" class="text-primary hover:text-secondary transition-colors" aria-label="Shopping cart"><span
+                        class="material-symbols-outlined">shopping_bag</span></a>
                 <a href="./admin/login.php"><button class="text-primary hover:text-secondary transition-colors"><span
                         class="material-symbols-outlined">person</span></button></a>
                 <a href="./admin/dashboard.php"><button class="md:hidden text-primary hover:text-secondary transition-colors"><span
@@ -166,7 +170,7 @@
                 preload="auto"
                 data-alt="A grand cinematic view of a Rajasthani palace courtyard, bathed in warm, soft sunlight.">
                 <source src="videos/Hero-Video.mp4" type="video/mp4">
-                Your browser does not support the video tag.
+                <!-- Your browser does not support the video tag. -->
             </video>
 
             <!-- Dark Overlay for Contrast -->
@@ -208,98 +212,28 @@
                         Indian craft, colour and quiet extravagance.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
-                    <!-- Product 1 -->
-                    <a class="group block border border-outline-variant p-4 bg-primary-container card-shadow transition-transform hover:-translate-y-1 duration-300 relative"
-                        href="#">
-                        <div class="aspect-[3/4] mb-6 overflow-hidden relative border border-outline-variant/50">
-                            <img alt="Sculptural Vase"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                data-alt="A beautifully crafted sculptural ceramic vase"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPZabbBWyH2QZAvTlkjMGUvOjXtoJiFb-ApmF0IxLCCUyThcocDFVe3YM54TfBkaSE_M1Ct2oYN1VqMH6gwDEsClKoD3D-TywyeD6RSCYfNq8M6J6PjUsuQPE0u7BMkAPgOJm9oHh9-C0CmakWDbzhS9xGCIDoKDryb7n2y8VhMhPrMbNdfzeIkNDNtE9l4RtoWsJ6-bLxvC1ePyYxRLUwBeBewWV2q5Me76KOuDMR1tRYhHmVLts">
-                            <span
-                                class="absolute top-2 right-2 border border-outline bg-background/90 backdrop-blur px-2 py-1 font-label-sm text-label-sm uppercase text-primary">NEW</span>
-                            <div
-                                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span
-                                    class="bg-background/90 backdrop-blur px-4 py-2 font-label-sm text-label-sm uppercase tracking-widest text-primary border border-outline transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">VIEW
-                                    PIECE</span>
+                    <?php foreach ($featuredProducts as $product): ?>
+                        <a class="group block border border-outline-variant p-4 bg-primary-container card-shadow transition-transform hover:-translate-y-1 duration-300 relative cursor-pointer"
+                            href="product.php?id=<?= (int) $product['id'] ?>">
+                            <div class="aspect-[3/4] mb-6 overflow-hidden relative border border-outline-variant/50">
+                                <img alt="<?= htmlspecialchars($product['title']) ?>"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    src="<?= htmlspecialchars(product_image_src($product)) ?>">
+                                <div
+                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span
+                                        class="bg-background/90 px-4 py-2 font-label-sm text-label-sm uppercase tracking-widest text-primary border border-outline transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300">VIEW
+                                        PRODUCT</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="text-center">
-                            <h3
-                                class="font-headline-md text-headline-md text-on-background mb-2 group-hover:text-secondary transition-colors">
-                                Sculptural Vases</h3>
-                            <p class="font-body-md text-body-md text-on-surface-variant">From ₹4,500</p>
-                        </div>
-                    </a>
-                    <!-- Product 2 -->
-                    <a class="group block border border-outline-variant p-4 bg-primary-container card-shadow transition-transform hover:-translate-y-1 duration-300 relative"
-                        href="#">
-                        <div class="aspect-[3/4] mb-6 overflow-hidden relative border border-outline-variant/50">
-                            <img alt="Heritage Lamps"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                data-alt="An elegant brass table lamp"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1UCv6L4GGjoWS0S10rXAH04RIa7eU6P52s6Vg-NAETMB5imUDAPhYVYeQ7omCQ2O4gKVauD_MSPDUn9cQeJFRyqFDaUxxJSwRr9Av-CRIpMyS3rfn-nJsAhv46TJ_9N2CUu0O9KpD99A4PypOP44jrhsfi4Haeg9mMAMlhiOQHWxXVxbX-CiUVRQDFuLfjECCxfIvY44NfL3uioRRnVo6L9zEDS3BK5iDLyRCakQCzXn3lMIw5oo">
-                            <div
-                                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span
-                                    class="bg-background/90 backdrop-blur px-4 py-2 font-label-sm text-label-sm uppercase tracking-widest text-primary border border-outline transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">VIEW
-                                    PIECE</span>
+                            <div class="text-center">
+                                <h3
+                                    class="font-headline-md text-headline-md text-on-background mb-2 group-hover:text-secondary group-hover:underline decoration-secondary underline-offset-4 transition-colors">
+                                    <?= htmlspecialchars($product['title']) ?></h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant"><?= htmlspecialchars(money_inr($product['price'])) ?></p>
                             </div>
-                        </div>
-                        <div class="text-center">
-                            <h3
-                                class="font-headline-md text-headline-md text-on-background mb-2 group-hover:text-secondary transition-colors">
-                                Heritage Lamps</h3>
-                            <p class="font-body-md text-body-md text-on-surface-variant">From ₹12,000</p>
-                        </div>
-                    </a>
-                    <!-- Product 3 -->
-                    <a class="group block border border-outline-variant p-4 bg-primary-container card-shadow transition-transform hover:-translate-y-1 duration-300 relative"
-                        href="#">
-                        <div class="aspect-[3/4] mb-6 overflow-hidden relative border border-outline-variant/50">
-                            <img alt="Arched Mirrors"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                data-alt="A stunning arched wall mirror"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD38KwQGly2Hs4r6YPKfJ8yqS6xpVh_2oW5H3N4m9KUoGVt1dTqf84xQaJJtevwBfcIr8ppe4HTD7d3ZhPZWhGZ1jBfqVkriVFnvQyxIbRBgMhtwydUKJhAtmoV7wyoO2QnZsNTGHQz892lp4pNA_GPEAeIT1dJGF4OAr4POod0josM8cpbNOCOvElVmlYTY75rkyvZyiTqmLafef1CddI88AQ5J_h6zI7wYNBHva8mPbwF5-AWCX0">
-                            <div
-                                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span
-                                    class="bg-background/90 backdrop-blur px-4 py-2 font-label-sm text-label-sm uppercase tracking-widest text-primary border border-outline transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">VIEW
-                                    PIECE</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <h3
-                                class="font-headline-md text-headline-md text-on-background mb-2 group-hover:text-secondary transition-colors">
-                                Arched Mirrors</h3>
-                            <p class="font-body-md text-body-md text-on-surface-variant">From ₹8,900</p>
-                        </div>
-                    </a>
-                    <!-- Product 4 -->
-                    <a class="group block border border-outline-variant p-4 bg-primary-container card-shadow transition-transform hover:-translate-y-1 duration-300 relative"
-                        href="#">
-                        <div class="aspect-[3/4] mb-6 overflow-hidden relative border border-outline-variant/50">
-                            <img alt="Ceramic Objects"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                data-alt="A curated arrangement of small, tactile ceramic objects"
-                                src="https://lh3git Vk46zA5Ixpen70m-URW4ZydPQrWVrC2TZmDodufBUDG81rv0SrR8pOEqzncLSExsFpU8vRhOCd7E_2Y73r3i7TLaJIX611ofOHY2dZP3-9UpWBT6CX4bCXKMK-yPJLVEoe4ezexvWAVIDlmq67kcKzVJzzYmF-qFcAzeifuZdtvDDw6lZb4aa6BAywqN8yKeZAGyxQ8D6QTxPMuBpYRicltC0sMMFdo97Fs_AU9omIs">
-                            <span
-                                class="absolute top-2 right-2 border border-outline bg-background/90 backdrop-blur px-2 py-1 font-label-sm text-label-sm uppercase text-primary">LIMITED</span>
-                            <div
-                                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span
-                                    class="bg-background/90 backdrop-blur px-4 py-2 font-label-sm text-label-sm uppercase tracking-widest text-primary border border-outline transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">VIEW
-                                    PIECE</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <h3
-                                class="font-headline-md text-headline-md text-on-background mb-2 group-hover:text-secondary transition-colors">
-                                Ceramic Objects</h3>
-                            <p class="font-body-md text-body-md text-on-surface-variant">From ₹2,200</p>
-                        </div>
-                    </a>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>
@@ -312,7 +246,7 @@
                         class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-background mb-4 md:mb-0">
                         STYLE YOUR STORY</h2>
                     <a class="font-label-lg text-label-lg uppercase tracking-widest text-secondary hover:text-on-background transition-colors flex items-center group"
-                        href="#">
+                        href="rooms.php">
                         EXPLORE MOODS <span
                             class="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
@@ -412,7 +346,7 @@
                             Every piece is a dialogue between the past and the present, designed to age beautifully in
                             your personal sanctuary.
                         </p>
-                        <a class="btn-secondary" href="#">DISCOVER OUR STORY</a>
+                        <a class="btn-secondary" href="story.php">DISCOVER OUR STORY</a>
                     </div>
                 </div>
             </div>
@@ -432,7 +366,7 @@
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
                     href="#">SHOP</a>
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
-                    href="#">COLLECTIONS</a>
+                    href="products.php">COLLECTIONS</a>
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
                     href="#">OUR STORY</a>
             </div>

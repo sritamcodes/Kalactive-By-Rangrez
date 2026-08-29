@@ -180,7 +180,8 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
 /* SHAYAN + BHOJ side by side */
 .rooms-page .rp-room--pair{
   grid-template-columns:1fr 1fr;
-  border-top:1px solid #C8C0B0
+  border-top:1px solid #C8C0B0;
+  align-items:stretch
 }
 @media(max-width:900px){.rooms-page .rp-room--pair{grid-template-columns:1fr}}
 /* KARYA — text heavy left, image right */
@@ -258,7 +259,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
 
 /* Pair cells */
 .rooms-page .rp-room--pair > .rp-room__cell{
-  position:relative;overflow:hidden;min-height:460px;
+  display:block;position:relative;overflow:hidden;min-height:460px;min-width:0;
   border-right:1px solid #C8C0B0;
 }
 .rooms-page .rp-room--pair > .rp-room__cell:last-child{border-right:none}
@@ -481,7 +482,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
   <div class="max-w-[1440px] mx-auto w-full px-margin-mobile md:px-margin-desktop py-4 flex items-center justify-between">
     <div class="hidden md:flex items-center space-x-8">
       <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="index.php">SHOP</a>
-      <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="index.php">COLLECTIONS</a>
+      <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="products.php">COLLECTIONS</a>
       <a class="text-secondary border-b border-secondary font-label-lg text-label-lg uppercase tracking-widest opacity-80" href="rooms.php">ROOMS</a>
       <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="story.php">OUR STORY</a>
     </div>
@@ -550,7 +551,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
   <div class="rp-room rp-room--baithak rp-reveal" id="room-baithak">
     <div class="rp-room__img-panel">
       <img class="rp-room__img"
-        src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=85&auto=format&fit=crop"
+        src="https://i.pinimg.com/1200x/99/14/2d/99142d743c16a0823e895fcec75fe29c.jpg"
         alt="A warm Rajasthani-style sitting room with low carved wooden seating rich terracotta textiles antique brass lamps and arched sandstone walls.">
       <div class="rp-room__img-overlay"></div>
       <span class="rp-room__num">01 of 06</span>
@@ -574,14 +575,15 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
       </div>
     </div>
   </div>
-
+<br>
+<br>
   <!-- ── 02 + 03 SHAYAN & BHOJ — side-by-side pair ── -->
   <div class="rp-room rp-room--pair rp-reveal">
 
     <!-- SHAYAN -->
     <a class="rp-room__cell" href="#">
       <img class="rp-room__cell-img"
-        src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=900&q=85&auto=format&fit=crop"
+        src="https://i.pinimg.com/736x/e1/07/9d/e1079d18fe963590f99bf90e341fec28.jpg"
         alt="An elegant Indian heritage bedroom with handwoven block-print textiles warm wooden furniture arched wall details and brass bedside lighting.">
       <div class="rp-room__cell-overlay"></div>
       <div class="rp-room__cell-body">
@@ -589,9 +591,9 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
         <h3 class="rp-room__cell-name">Shayan</h3>
         <p class="rp-room__cell-english">Bedroom / Rest</p>
         <p class="rp-room__cell-tagline">Slow mornings. Softer nights.</p>
-        <a class="rp-room__cell-cta" href="#">
+        <span class="rp-room__cell-cta">
           Explore Shayan <span class="material-symbols-outlined rp-room__cell-arrow">arrow_forward</span>
-        </a>
+        </span>
         <div class="rp-room__cell-chips">
           <span class="rp-room__cell-chip">Candles</span>
           <span class="rp-room__cell-chip">Textiles</span>
@@ -603,7 +605,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
     <!-- BHOJ -->
     <a class="rp-room__cell" href="#">
       <img class="rp-room__cell-img"
-        src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=900&q=85&auto=format&fit=crop"
+        src="https://i.pinimg.com/736x/10/e8/6d/10e86dc4169804d1f8b6da382ffda5ac.jpg"
         alt="An intimate Indian dining room with handcrafted ceramics brassware textile runner warm carved wood and arched haveli architecture.">
       <div class="rp-room__cell-overlay"></div>
       <div class="rp-room__cell-body">
@@ -611,9 +613,9 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
         <h3 class="rp-room__cell-name">Bhoj</h3>
         <p class="rp-room__cell-english">Dining / Hosting</p>
         <p class="rp-room__cell-tagline">Make every meal ceremonial.</p>
-        <a class="rp-room__cell-cta" href="#">
+        <span class="rp-room__cell-cta">
           Explore Bhoj <span class="material-symbols-outlined rp-room__cell-arrow">arrow_forward</span>
-        </a>
+        </span>
         <div class="rp-room__cell-chips">
           <span class="rp-room__cell-chip">Ceramics</span>
           <span class="rp-room__cell-chip">Serveware</span>
@@ -623,7 +625,8 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
     </a>
 
   </div>
-
+<br>
+<br>
   <!-- ── 04 KARYA — text-heavy left, image right ── -->
   <div class="rp-room rp-room--karya rp-reveal">
     <div class="rp-room__text-panel" style="border-left:none;border-right:1px solid #C8C0B0">
@@ -647,7 +650,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
     </div>
     <div class="rp-room__img-panel">
       <img class="rp-room__img"
-        src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=900&q=85&auto=format&fit=crop"
+        src="https://i.pinimg.com/736x/ec/f3/9a/ecf39a5364b9a5e9040874bd84a52ffa.jpg"
         alt="A refined Indian study with dark carved wooden desk brass lamp handmade ceramics and an arched alcove with warm afternoon light.">
       <div class="rp-room__img-overlay"></div>
     </div>
@@ -660,7 +663,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
 ════════════════════════════════════════════════════════ -->
 <section class="rp-editorial rp-reveal">
   <img class="rp-editorial__img"
-    src="https://images.unsplash.com/photo-1614267157481-ca2b81ac6fcc?w=1800&q=85&auto=format&fit=crop"
+    src="https://i.pinimg.com/1200x/7f/ab/43/7fab4316ccb24a8f1ade55496448bed7.jpg"
     alt="A warm Indian interior courtyard with sandstone limewash walls terracotta floor handwoven textiles and soft golden afternoon light.">
   <div class="rp-editorial__overlay"></div>
   <div class="rp-editorial__content">
@@ -673,7 +676,8 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
     <p class="rp-editorial__sub">Heritage, texture and objects with a point of view.</p>
   </div>
 </section>
-
+<br>
+<br>
 <!-- ════════════════════════════════════════════════════════
      5. ROOMS continued — AANGAN + DEORHI
 ════════════════════════════════════════════════════════ -->
@@ -683,7 +687,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
   <div class="rp-room rp-room--aangan rp-reveal" style="border-top:1px solid #C8C0B0">
     <div class="rp-room__img-panel">
       <img class="rp-room__img"
-        src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1800&q=85&auto=format&fit=crop"
+        src="https://i.pinimg.com/736x/38/48/e8/3848e87444f043374f0743b3f22b3a1a.jpg"
         alt="A contemporary Rajasthani courtyard with sandstone arched openings textiles floor seating and warm sunlight filtering through carved jharokha.">
       <div class="rp-room__img-overlay"></div>
       <span class="rp-room__num">05 of 06</span>
@@ -707,7 +711,8 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
       </div>
     </div>
   </div>
-
+<br>
+<br>
   <!-- ── 06 DEORHI — portrait right ── -->
   <div class="rp-room rp-room--deorhi rp-reveal">
     <div class="rp-room__text-panel" style="border-left:none;border-right:1px solid #C8C0B0;justify-content:flex-start;padding-top:60px">
@@ -731,7 +736,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
     </div>
     <div class="rp-room__img-panel">
       <img class="rp-room__img"
-        src="https://images.unsplash.com/photo-1616046229478-9901c5536a45?w=900&q=85&auto=format&fit=crop"
+        src="https://i.pinimg.com/736x/7d/58/eb/7d58ebe0b2c58b7387731b420838930f.jpg"
         alt="An elegant haveli-inspired entryway with arched mirror antique brass lighting dark wood console and a ceramic vessel.">
       <div class="rp-room__img-overlay"></div>
     </div>
@@ -766,7 +771,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
   <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-8">
     <div class="flex flex-col space-y-4">
       <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="index.php">SHOP</a>
-      <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="index.php">COLLECTIONS</a>
+      <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="products.php">COLLECTIONS</a>
       <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4" href="#">OUR STORY</a>
     </div>
     <div class="flex flex-col space-y-4">
@@ -822,4 +827,3 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
 </script>
 </body>
 </html>
-
