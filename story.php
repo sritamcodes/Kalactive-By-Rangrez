@@ -249,7 +249,7 @@ $pageTitle = "Our Story — KALACTIVE";
                     <span class="material-symbols-outlined">shopping_bag</span>
                 </a>
 
-                <a href="login.php" aria-label="Account" class="text-[#1b1c1a] hover:text-[#974724] transition-colors">
+                <a href="./admin/login.php" aria-label="Account" class="text-[#1b1c1a] hover:text-[#974724] transition-colors">
                     <span class="material-symbols-outlined">person</span>
                 </a>
 
