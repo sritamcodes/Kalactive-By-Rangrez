@@ -254,7 +254,7 @@ $featuredProducts = featured_products(4);
                 <div class="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4 h-[800px]">
                     <!-- ROYAL - Large -->
                     <a class="group relative md:col-span-2 md:row-span-2 overflow-hidden border border-outline-variant bg-surface-container"
-                        href="#">
+                        href="products.php">
                         <img alt="Royal Mood"
                             class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                             data-alt="A sumptuous, deeply textured interior showcasing a 'Royal' mood. Rich terracotta fabrics, dark carved wood furniture, and brass accents are arranged elegantly. The lighting is moody and dramatic, reminiscent of a modernized heritage palace setting."
@@ -270,7 +270,7 @@ $featuredProducts = featured_products(4);
                     </a>
                     <!-- EARTHED - Medium -->
                     <a class="group relative overflow-hidden border border-outline-variant bg-surface-container"
-                        href="#">
+                        href="product.php">
                         <img alt="Earthed Mood"
                             class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                             data-alt="A minimalist 'Earthed' mood setting featuring natural linen textiles, unglazed pottery, and muted sandstone colors. Soft, diffused daylight emphasizes the organic, tactile qualities of the materials, creating a serene, grounding atmosphere."
@@ -364,11 +364,11 @@ $featuredProducts = featured_products(4);
         <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="flex flex-col space-y-4">
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
-                    href="#">SHOP</a>
+                    href="products.php">SHOP</a>
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
                     href="products.php">COLLECTIONS</a>
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
-                    href="#">OUR STORY</a>
+                    href="story.php">OUR STORY</a>
             </div>
             <div class="flex flex-col space-y-4">
                 <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:underline decoration-secondary underline-offset-4 transition-transform active:scale-[0.99]"
