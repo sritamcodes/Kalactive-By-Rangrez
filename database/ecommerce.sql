@@ -42,9 +42,14 @@ CREATE TABLE IF NOT EXISTS `products` (
     `stock` INT NOT NULL DEFAULT 0,
     `image` VARCHAR(255) NULL,
     `featured` TINYINT NOT NULL DEFAULT 0,
+    `active` TINYINT NOT NULL DEFAULT 1,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `products`
+    ADD COLUMN IF NOT EXISTS `featured` TINYINT NOT NULL DEFAULT 0 AFTER `image`,
+    ADD COLUMN IF NOT EXISTS `active` TINYINT NOT NULL DEFAULT 1 AFTER `featured`;
 
 -- --------------------------------------------------------
 -- Table structure for table `orders`
@@ -57,7 +62,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `customer_address` TEXT NOT NULL,
     `total_amount` DECIMAL(10, 2) NOT NULL,
     `payment_method` VARCHAR(50) DEFAULT 'cod',
-    `status` ENUM('pending', 'processing', 'completed', 'cancelled') DEFAULT 'pending',
+    `payment_status` VARCHAR(50) DEFAULT 'Pending',
+    `status` ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -77,9 +83,32 @@ CREATE TABLE IF NOT EXISTS `order_items` (
     FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE `orders`
+    ADD COLUMN IF NOT EXISTS `payment_method` VARCHAR(50) DEFAULT 'cod' AFTER `total_amount`,
+    ADD COLUMN IF NOT EXISTS `payment_status` VARCHAR(50) DEFAULT 'Pending' AFTER `payment_method`,
+    MODIFY COLUMN `status` ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending';
+
+-- --------------------------------------------------------
+-- Table structure for table `wishlist`
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `wishlist` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `product_id` INT NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY `unique_wishlist_product` (`user_id`, `product_id`),
+    CONSTRAINT `fk_wishlist_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_wishlist_product` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- --------------------------------------------------------
 -- Sample Data for KALATIVE Artisanal Home Collection
 -- --------------------------------------------------------
+INSERT INTO `users` (`name`, `email`, `password`, `role`) VALUES
+('Kalactive Admin', 'admin1@kalactive.test', '$2y$10$.Oeuac5wtTsoCtbQ7hZfSOtKDmqhk/0QiFELAWMHwUMT3h88OjeCK', 'admin'),
+('Rangrez Admin', 'admin2@kalactive.test', '$2y$10$yjpzbQiym3qmMLiFfxQdR.bZv1bC/21ugrCz7/QgKQNt0iwwT1pXy', 'admin')
+ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `password`=VALUES(`password`), `role`='admin';
+
 INSERT INTO `categories` (`id`, `name`, `slug`) VALUES
 (1, 'Vases & Vessels', 'vases-vessels'),
 (2, 'Heritage Lighting', 'heritage-lighting'),
@@ -101,4 +130,4 @@ INSERT INTO `products` (`id`, `category_id`, `title`, `slug`, `description`, `pr
 (10, 3, 'Haveli Jharokha Mirror', 'haveli-jharokha-mirror', 'Intricately carved architectural mirror frame inspired by Rajasthani palace lattice stone balconies.', 32000.00, 6, 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80', 0),
 (11, 5, 'Hand-Woven Dhurrie Rug', 'hand-woven-dhurrie-rug', 'Heritage flat-weave wool dhurrie in organic oat and terracotta geometric motifs, handloomed by master weavers.', 22500.00, 9, 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=800&q=80', 0),
 (12, 5, 'Monolithic Stone Table', 'monolithic-stone-table', 'Chiseled beige sandstone sculptural side pedestal celebrating the raw mineral weight of the Aravalli hills.', 29000.00, 8, 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80', 0)
-ON DUPLICATE KEY UPDATE `title`=VALUES(`title`), `slug`=VALUES(`slug`), `description`=VALUES(`description`), `price`=VALUES(`price`), `image`=VALUES(`image`), `featured`=VALUES(`featured`);
+ON DUPLICATE KEY UPDATE `title`=VALUES(`title`), `slug`=VALUES(`slug`), `description`=VALUES(`description`), `price`=VALUES(`price`), `stock`=VALUES(`stock`), `image`=VALUES(`image`), `featured`=VALUES(`featured`), `active`=1;

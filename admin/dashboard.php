@@ -60,8 +60,8 @@ $admin = current_user();
                     <h2>Recent Orders</h2>
                     <div class="table-scroll">
                         <table>
-                            <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Created</th></tr></thead>
-                            <tbody data-recent-orders><tr><td colspan="5">Loading...</td></tr></tbody>
+                            <thead><tr><th>Order</th><th>Customer</th><th>Email</th><th>Total</th><th>Payment</th><th>Payment Status</th><th>Status</th><th>Created</th></tr></thead>
+                            <tbody data-recent-orders><tr><td colspan="8">Loading...</td></tr></tbody>
                         </table>
                     </div>
                 </section>
@@ -99,11 +99,12 @@ $admin = current_user();
             const tbody = document.querySelector(target);
             if (!tbody) return;
             if (!rows.length) {
-                tbody.innerHTML = '<tr><td colspan="5">No orders yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8">No orders yet.</td></tr>';
                 return;
             }
             tbody.innerHTML = rows.map(function (order) {
-                return '<tr><td>#' + escapeHtml(order.id) + '</td><td>' + escapeHtml(order.customer_name) + '</td><td>' + formatInr.format(Number(order.total_amount || 0)) + '</td><td>' + escapeHtml(order.status) + '</td><td>' + escapeHtml(order.created_at) + '</td></tr>';
+                const labels = { cod: 'Cash on Delivery', upi: 'UPI', card: 'Credit/Debit Card', net_banking: 'Net Banking' };
+                return '<tr><td>#' + escapeHtml(order.id) + '</td><td>' + escapeHtml(order.customer_name) + '</td><td>' + escapeHtml(order.customer_email) + '</td><td>' + formatInr.format(Number(order.total_amount || 0)) + '</td><td>' + escapeHtml(labels[order.payment_method] || order.payment_method || 'Cash on Delivery') + '</td><td>' + escapeHtml(order.payment_status || 'Pending') + '</td><td>' + escapeHtml(order.status) + '</td><td>' + escapeHtml(order.created_at) + '</td></tr>';
             }).join('');
         }
 

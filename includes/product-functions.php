@@ -11,16 +11,6 @@ function db_column_exists(string $table, string $column): bool
 {
     global $conn;
 
-    if (db_driver() === 'sqlite') {
-        $stmt = $conn->query("PRAGMA table_info($table)");
-        foreach ($stmt->fetchAll() as $row) {
-            if (($row['name'] ?? '') === $column) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     $stmt = $conn->prepare("SHOW COLUMNS FROM `$table` LIKE ?");
     $stmt->execute([$column]);
     return (bool) $stmt->fetch();
@@ -47,17 +37,6 @@ function ensure_wishlist_schema(): void
 {
     global $conn;
 
-    if (db_driver() === 'sqlite') {
-        $conn->exec("CREATE TABLE IF NOT EXISTS wishlist (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            product_id INTEGER NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            UNIQUE(user_id, product_id)
-        )");
-        return;
-    }
-
     $conn->exec("CREATE TABLE IF NOT EXISTS wishlist (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -67,6 +46,35 @@ function ensure_wishlist_schema(): void
         CONSTRAINT fk_wishlist_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         CONSTRAINT fk_wishlist_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+function ensure_order_payment_schema(): void
+{
+    global $conn;
+
+    if (!db_column_exists('orders', 'payment_method')) {
+        $conn->exec("ALTER TABLE orders ADD COLUMN payment_method VARCHAR(50) DEFAULT 'cod'");
+    }
+
+    if (!db_column_exists('orders', 'payment_status')) {
+        $conn->exec("ALTER TABLE orders ADD COLUMN payment_status VARCHAR(50) DEFAULT 'Pending' AFTER payment_method");
+    }
+}
+
+function payment_methods(): array
+{
+    return [
+        'cod' => 'Cash on Delivery',
+        'upi' => 'UPI',
+        'card' => 'Credit/Debit Card',
+        'net_banking' => 'Net Banking',
+    ];
+}
+
+function payment_method_label(?string $method): string
+{
+    $methods = payment_methods();
+    return $methods[$method ?? ''] ?? 'Cash on Delivery';
 }
 
 function product_slug(string $title): string
@@ -234,4 +242,5 @@ function uploaded_product_image(?string $currentImage = null): ?string
 }
 
 ensure_product_schema();
+ensure_order_payment_schema();
 ?>

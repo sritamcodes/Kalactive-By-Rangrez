@@ -13,7 +13,7 @@ try {
         'customers' => (int) $conn->query("SELECT COUNT(*) FROM users WHERE role = 'customer'")->fetchColumn(),
     ];
 
-    $recentStmt = $conn->query("SELECT id, customer_name, total_amount, status, created_at FROM orders ORDER BY created_at DESC, id DESC LIMIT 6");
+    $recentStmt = $conn->query("SELECT id, customer_name, customer_email, total_amount, payment_method, payment_status, status, created_at FROM orders ORDER BY created_at DESC, id DESC LIMIT 6");
     $topStmt = $conn->query("SELECT product_name, SUM(quantity) AS units, SUM(total) AS revenue FROM order_items GROUP BY product_name ORDER BY units DESC LIMIT 5");
     $lowStockStmt = $conn->query("SELECT id, title, stock FROM products WHERE active = 1 AND stock <= 5 ORDER BY stock ASC, title ASC LIMIT 5");
 

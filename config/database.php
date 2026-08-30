@@ -11,7 +11,6 @@ define('DB_NAME', getenv('DB_NAME') ?: 'ecommerce_db');
 
 $conn = null;
 
-// 1. Attempt MySQL connection if driver is available
 if (in_array('mysql', PDO::getAvailableDrivers())) {
     $ports = [DB_PORT, '3306'];
     foreach ($ports as $port) {
@@ -23,21 +22,13 @@ if (in_array('mysql', PDO::getAvailableDrivers())) {
             ]);
             break;
         } catch (PDOException $e) {
-            // Try next port or fallback
+            // Try the next configured MySQL port.
         }
     }
 }
 
-// 2. Fallback to pre-seeded SQLite database if MySQL/driver is unavailable
 if (!$conn) {
-    try {
-        $sqliteFile = __DIR__ . '/../database/ecommerce.sqlite';
-        $conn = new PDO("sqlite:" . $sqliteFile);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        http_response_code(500);
-        die("Unable to connect to the store database. Please try again later.");
-    }
+    http_response_code(500);
+    die("Unable to connect to the MySQL store database. Please try again later.");
 }
 ?>
