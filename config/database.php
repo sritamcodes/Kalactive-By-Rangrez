@@ -3,16 +3,31 @@
  * Database Configuration
  */
 
-define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
-define('DB_PORT', getenv('DB_PORT') ?: '3310');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '');
-define('DB_NAME', getenv('DB_NAME') ?: 'ecommerce_db');
+function db_env(string $key, string $default = ''): string
+{
+    $value = getenv($key);
+    if ($value === false && isset($_ENV[$key])) {
+        $value = $_ENV[$key];
+    }
+    if ($value === false && isset($_SERVER[$key])) {
+        $value = $_SERVER[$key];
+    }
+
+    return $value === false || $value === '' ? $default : (string) $value;
+}
+
+$envHost = db_env('DB_HOST');
+
+define('DB_HOST', $envHost !== '' ? $envHost : '127.0.0.1');
+define('DB_PORT', db_env('DB_PORT', $envHost !== '' ? '3306' : '3310'));
+define('DB_USER', db_env('DB_USER', 'root'));
+define('DB_PASS', db_env('DB_PASS'));
+define('DB_NAME', db_env('DB_NAME', 'ecommerce_db'));
 
 $conn = null;
 
-if (in_array('mysql', PDO::getAvailableDrivers())) {
-    $ports = [DB_PORT, '3306'];
+if (in_array('mysql', PDO::getAvailableDrivers(), true)) {
+    $ports = $envHost !== '' ? [DB_PORT] : array_unique([DB_PORT, '3306']);
     foreach ($ports as $port) {
         try {
             $conn = new PDO("mysql:host=" . DB_HOST . ";port=" . $port . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS, [
