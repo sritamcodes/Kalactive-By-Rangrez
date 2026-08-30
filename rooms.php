@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿<?php
+$activePage = 'rooms';
+require_once __DIR__ . '/includes/session.php';
+include __DIR__ . '/includes/public-nav.php';
+?>
+<!DOCTYPE html>
 <html class="scroll-smooth" lang="en">
 <head>
 <meta charset="utf-8">
@@ -476,12 +481,6 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
 </head>
 <body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden selection:bg-secondary-container selection:text-on-secondary-container rooms-page" data-mode="connect">
 <div class="texture-overlay"></div>
-
-<?php
-$activePage = 'rooms';
-require_once __DIR__ . '/includes/session.php';
-include __DIR__ . '/includes/public-nav.php';
-?>
 
 <main>
 

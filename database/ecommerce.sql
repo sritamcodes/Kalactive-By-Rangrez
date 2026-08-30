@@ -105,8 +105,8 @@ CREATE TABLE IF NOT EXISTS `wishlist` (
 -- Sample Data for KALATIVE Artisanal Home Collection
 -- --------------------------------------------------------
 INSERT INTO `users` (`name`, `email`, `password`, `role`) VALUES
-('Kalactive Admin', 'admin1@kalactive.test', '$2y$10$.Oeuac5wtTsoCtbQ7hZfSOtKDmqhk/0QiFELAWMHwUMT3h88OjeCK', 'admin'),
-('Rangrez Admin', 'admin2@kalactive.test', '$2y$10$yjpzbQiym3qmMLiFfxQdR.bZv1bC/21ugrCz7/QgKQNt0iwwT1pXy', 'admin')
+('Kalactive Admin', 'admin1@kalactive.test', '$2y$10$XelgZ4RZ1yf3fbpwSG8CQuG1Mu.XBse0EVJ8HkbXHDlJLF6cHOSBO', 'admin'),
+('Rangrez Admin', 'admin2@kalactive.test', '$2y$10$DhqksYAiswuxnanNB1Ju8OYZ0/Hl7Kn9Ij1avX17WMwONoqdJuvF.', 'admin')
 ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `password`=VALUES(`password`), `role`='admin';
 
 INSERT INTO `categories` (`id`, `name`, `slug`) VALUES
