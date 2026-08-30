@@ -71,7 +71,6 @@ if (DB_HOST !== '' && in_array('mysql', PDO::getAvailableDrivers(), true)) {
             break;
         } catch (PDOException $e) {
             $connectionError = $e->getMessage();
-            // Try the next configured MySQL port.
         }
     }
 }
@@ -80,9 +79,21 @@ if (!$conn && $connectionError === '') {
     $connectionError = 'PDO MySQL driver is unavailable.';
 }
 
+if (!$conn && in_array('sqlite', PDO::getAvailableDrivers(), true) && is_file(SQLITE_PATH)) {
+    try {
+        $conn = new PDO('sqlite:' . SQLITE_PATH, null, null, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+        $conn->exec('PRAGMA foreign_keys = ON');
+    } catch (PDOException $e) {
+        $connectionError = $e->getMessage();
+    }
+}
+
 if (!$conn) {
-    error_log('MySQL connection failed: ' . $connectionError);
+    error_log('Database connection failed: ' . $connectionError);
     http_response_code(500);
-    die("Unable to connect to the MySQL store database. Please try again later.");
+    die("Unable to connect to the store database. Please try again later.");
 }
 ?>
