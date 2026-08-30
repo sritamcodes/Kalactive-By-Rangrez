@@ -16,17 +16,30 @@ function db_env(string $key, string $default = ''): string
     return $value === false || $value === '' ? $default : (string) $value;
 }
 
-$envHost = db_env('DB_HOST');
+function db_is_local_host(string $host): bool
+{
+    return in_array(strtolower(trim($host)), ['localhost', '127.0.0.1', '::1'], true);
+}
 
-define('DB_HOST', $envHost !== '' ? $envHost : '127.0.0.1');
-define('DB_PORT', db_env('DB_PORT', $envHost !== '' ? '3306' : '3310'));
-define('DB_USER', db_env('DB_USER', 'root'));
-define('DB_PASS', db_env('DB_PASS'));
-define('DB_NAME', db_env('DB_NAME', 'ecommerce_db'));
+$databaseUrl = db_env('DATABASE_URL', db_env('MYSQL_URL'));
+$databaseParts = $databaseUrl !== '' ? parse_url($databaseUrl) : [];
+if (!is_array($databaseParts)) {
+    $databaseParts = [];
+}
+
+$isRender = db_env('RENDER') !== '' || db_env('RENDER_SERVICE_ID') !== '' || db_env('RENDER_EXTERNAL_URL') !== '';
+$configuredHost = db_env('DB_HOST', db_env('MYSQLHOST', $databaseParts['host'] ?? ''));
+$envHost = $isRender && db_is_local_host($configuredHost) ? '' : $configuredHost;
+
+define('DB_HOST', $envHost !== '' ? $envHost : ($isRender ? '' : '127.0.0.1'));
+define('DB_PORT', db_env('DB_PORT', db_env('MYSQLPORT', isset($databaseParts['port']) ? (string) $databaseParts['port'] : ($envHost !== '' ? '3306' : '3310'))));
+define('DB_USER', db_env('DB_USER', db_env('MYSQLUSER', isset($databaseParts['user']) ? rawurldecode((string) $databaseParts['user']) : 'root')));
+define('DB_PASS', db_env('DB_PASS', db_env('MYSQLPASSWORD', isset($databaseParts['pass']) ? rawurldecode((string) $databaseParts['pass']) : '')));
+define('DB_NAME', db_env('DB_NAME', db_env('MYSQLDATABASE', isset($databaseParts['path']) ? ltrim((string) $databaseParts['path'], '/') : 'ecommerce_db')));
 
 $conn = null;
 
-if (in_array('mysql', PDO::getAvailableDrivers(), true)) {
+if (DB_HOST !== '' && in_array('mysql', PDO::getAvailableDrivers(), true)) {
     $ports = $envHost !== '' ? [DB_PORT] : array_unique([DB_PORT, '3306']);
     foreach ($ports as $port) {
         try {
