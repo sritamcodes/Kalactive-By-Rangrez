@@ -21,21 +21,40 @@ function db_is_local_host(string $host): bool
     return in_array(strtolower(trim($host)), ['localhost', '127.0.0.1', '::1'], true);
 }
 
-$databaseUrl = db_env('DATABASE_URL', db_env('MYSQL_URL'));
+function db_first_env(array $keys, string $default = ''): string
+{
+    foreach ($keys as $key) {
+        $value = db_env($key);
+        if ($value !== '') {
+            return $value;
+        }
+    }
+
+    return $default;
+}
+
+$databaseUrl = db_first_env(['DATABASE_URL', 'MYSQL_URL', 'MYSQL_PUBLIC_URL', 'MYSQL_PRIVATE_URL', 'CLEARDB_DATABASE_URL', 'JAWSDB_URL']);
 $databaseParts = $databaseUrl !== '' ? parse_url($databaseUrl) : [];
 if (!is_array($databaseParts)) {
     $databaseParts = [];
 }
 
 $isRender = db_env('RENDER') !== '' || db_env('RENDER_SERVICE_ID') !== '' || db_env('RENDER_EXTERNAL_URL') !== '';
-$configuredHost = db_env('DB_HOST', db_env('MYSQLHOST', $databaseParts['host'] ?? ''));
-$envHost = $isRender && db_is_local_host($configuredHost) ? '' : $configuredHost;
+$hostCandidates = [db_env('DB_HOST'), db_env('MYSQL_HOST'), db_env('MYSQLHOST'), db_env('MYSQL_ADDON_HOST'), $databaseParts['host'] ?? ''];
+$envHost = '';
+foreach ($hostCandidates as $host) {
+    $host = (string) $host;
+    if ($host !== '' && (!$isRender || !db_is_local_host($host))) {
+        $envHost = $host;
+        break;
+    }
+}
 
 define('DB_HOST', $envHost !== '' ? $envHost : ($isRender ? '' : '127.0.0.1'));
-define('DB_PORT', db_env('DB_PORT', db_env('MYSQLPORT', isset($databaseParts['port']) ? (string) $databaseParts['port'] : ($envHost !== '' ? '3306' : '3310'))));
-define('DB_USER', db_env('DB_USER', db_env('MYSQLUSER', isset($databaseParts['user']) ? rawurldecode((string) $databaseParts['user']) : 'root')));
-define('DB_PASS', db_env('DB_PASS', db_env('MYSQLPASSWORD', isset($databaseParts['pass']) ? rawurldecode((string) $databaseParts['pass']) : '')));
-define('DB_NAME', db_env('DB_NAME', db_env('MYSQLDATABASE', isset($databaseParts['path']) ? ltrim((string) $databaseParts['path'], '/') : 'ecommerce_db')));
+define('DB_PORT', db_first_env(['DB_PORT', 'MYSQL_PORT', 'MYSQLPORT', 'MYSQL_ADDON_PORT'], isset($databaseParts['port']) ? (string) $databaseParts['port'] : ($envHost !== '' ? '3306' : '3310')));
+define('DB_USER', db_first_env(['DB_USER', 'MYSQL_USER', 'MYSQLUSER', 'MYSQL_ADDON_USER'], isset($databaseParts['user']) ? rawurldecode((string) $databaseParts['user']) : 'root'));
+define('DB_PASS', db_first_env(['DB_PASS', 'MYSQL_PASSWORD', 'MYSQLPASSWORD', 'MYSQL_ADDON_PASSWORD'], isset($databaseParts['pass']) ? rawurldecode((string) $databaseParts['pass']) : ''));
+define('DB_NAME', db_first_env(['DB_NAME', 'MYSQL_DATABASE', 'MYSQLDATABASE', 'MYSQL_ADDON_DB'], isset($databaseParts['path']) ? ltrim((string) $databaseParts['path'], '/') : 'ecommerce_db'));
 
 $conn = null;
 
