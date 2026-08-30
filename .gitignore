@@ -1,0 +1,35 @@
+# =========================
+# KALACTIVE - Git Ignore
+# =========================
+
+# PHP sessions / runtime files
+/storage/sessions/*
+!/storage/sessions/.gitkeep
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Local database files
+*.sqlite
+*.sqlite3
+
+# IDE / editor files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# PHP / server temporary files
+*.cache

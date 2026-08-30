@@ -17,6 +17,17 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+function clear_legacy_admin_session(): void
+{
+    foreach (['admin_logged_in', 'admin_user'] as $legacyKey) {
+        if (isset($_SESSION[$legacyKey])) {
+            unset($_SESSION[$legacyKey]);
+        }
+    }
+}
+
+clear_legacy_admin_session();
+
 function e(?string $value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
@@ -41,6 +52,9 @@ function is_admin(): bool
 function login_user(array $user): void
 {
     session_regenerate_id(true);
+    foreach (['admin_logged_in', 'admin_user'] as $legacyKey) {
+        unset($_SESSION[$legacyKey]);
+    }
     $_SESSION['user'] = [
         'id' => (int) $user['id'],
         'name' => (string) $user['name'],
@@ -52,6 +66,9 @@ function login_user(array $user): void
 function logout_user(): void
 {
     $_SESSION = [];
+    foreach (['admin_logged_in', 'admin_user'] as $legacyKey) {
+        unset($_SESSION[$legacyKey]);
+    }
     if (ini_get('session.use_cookies')) {
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'] ?? '', (bool) ($params['secure'] ?? false), (bool) ($params['httponly'] ?? true));

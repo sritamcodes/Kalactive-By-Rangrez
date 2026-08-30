@@ -21,6 +21,7 @@ $accountTitle = $user ? 'Logout' : 'Login';
         <div class="flex items-center space-x-5">
             <a href="<?= e($navPrefix) ?>wishlist.php" class="text-primary hover:text-secondary transition-colors nav-icon-link" aria-label="Wishlist"><span class="material-symbols-outlined">favorite</span></a>
             <a href="<?= e($navPrefix) ?>cart.php" class="text-primary hover:text-secondary transition-colors nav-icon-link" aria-label="Shopping cart"><span class="material-symbols-outlined">shopping_bag</span><?php if ($cartCount > 0): ?><span class="nav-count"><?= (int) $cartCount ?></span><?php endif; ?></a>
+            <a href="<?= e($navPrefix) ?>admin/login.php" class="hidden sm:inline-flex text-primary hover:text-secondary transition-colors text-xs uppercase tracking-widest" aria-label="Admin login">ADMIN</a>
             <a href="<?= e($accountHref) ?>" class="hidden sm:inline-flex text-primary hover:text-secondary transition-colors text-xs uppercase tracking-widest" aria-label="<?= e($accountTitle) ?>"><?= e($accountLabel) ?></a>
             <button type="button" class="md:hidden text-primary hover:text-secondary transition-colors mobile-menu-button" aria-label="Open menu" aria-expanded="false" data-mobile-menu-button>
                 <span class="material-symbols-outlined">menu</span>
@@ -32,6 +33,7 @@ $accountTitle = $user ? 'Logout' : 'Login';
         <a href="<?= e($navPrefix) ?>products.php">COLLECTIONS</a>
         <a href="<?= e($navPrefix) ?>rooms.php">ROOMS</a>
         <a href="<?= e($navPrefix) ?>story.php">OUR STORY</a>
+        <a href="<?= e($navPrefix) ?>admin/login.php">ADMIN LOGIN</a>
         <a href="<?= e($user ? $navPrefix . 'logout.php' : $navPrefix . 'login.php') ?>"><?= e($user ? 'LOGOUT' : 'LOGIN / ACCOUNT') ?></a>
         <a href="<?= e($navPrefix) ?>wishlist.php">WISHLIST</a>
         <a href="<?= e($navPrefix) ?>cart.php">CART<?= $cartCount > 0 ? ' (' . (int) $cartCount . ')' : '' ?></a>

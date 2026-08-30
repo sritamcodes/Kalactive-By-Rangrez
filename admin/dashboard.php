@@ -13,6 +13,230 @@ $admin = current_user();
     <title>Admin Dashboard | Kalactive</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="admin-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ivory: #f5f1e8;
+            --paper: #f9f5f0;
+            --panel: #fffdf9;
+            --terracotta: #b86a45;
+            --sand: #c69d70;
+            --charcoal: #1f1d1a;
+            --ink: #2e2a27;
+            --muted: #6b635d;
+            --line: rgba(31,29,26,0.12);
+            --shadow: 0 22px 44px rgba(31, 29, 26, 0.08);
+            --success: #216f4f;
+            --warning: #a5662d;
+            --danger: #9f4139;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8f1e8, #f1e9df);
+            color: var(--ink);
+        }
+        a { text-decoration: none; }
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            background: rgba(255,255,255,0.2);
+        }
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1b1917, #2a2623);
+            color: #f0ede8;
+            padding: 28px 18px 20px;
+            border-right: 1px solid rgba(255,255,255,0.06);
+        }
+        .sidebar h2 {
+            margin: 0 0 18px;
+            padding: 0 10px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            letter-spacing: -0.04em;
+        }
+        .sidebar nav {
+            display: grid;
+            gap: 8px;
+        }
+        .sidebar a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 10px;
+            color: rgba(255,255,255,0.78);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+        }
+        .sidebar a.active, .sidebar a:hover {
+            background: rgba(184, 106, 69, 0.18);
+            color: #fff;
+        }
+        .sidebar .logout {
+            margin-top: 28px;
+            color: #f6b9a6;
+        }
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 28px 28px 40px;
+        }
+        .dashboard-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .admin-kicker {
+            margin: 0 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.7rem;
+            color: var(--terracotta);
+            font-weight: 700;
+        }
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 2vw + 1.1rem, 2.8rem);
+            font-family: 'Playfair Display', serif;
+            letter-spacing: -0.05em;
+            color: var(--charcoal);
+        }
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(33, 111, 79, 0.08);
+            border: 1px solid rgba(33,111,79,0.18);
+            color: var(--success);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .live-badge::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 0 rgba(33,111,79,0.4);
+            animation: pulse 1.8s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(33,111,79,0.4); }
+            70% { box-shadow: 0 0 0 9px rgba(33,111,79,0); }
+            100% { box-shadow: 0 0 0 0 rgba(33,111,79,0); }
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(160px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .stat-card, .admin-panel {
+            background: rgba(255,255,255,0.72);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+        }
+        .stat-card {
+            padding: 18px 18px 16px;
+        }
+        .stat-card p {
+            margin: 0 0 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+        .stat-card h3 {
+            margin: 0;
+            font-size: clamp(1.5rem, 2vw, 2.2rem);
+            color: var(--charcoal);
+            letter-spacing: -0.05em;
+        }
+        .dashboard-panels {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
+            gap: 20px;
+        }
+        .admin-panel {
+            padding: 18px 18px 12px;
+            overflow: hidden;
+        }
+        .admin-panel h2 {
+            margin: 0 0 14px;
+            font-size: 1.2rem;
+            color: var(--charcoal);
+            font-family: 'Playfair Display', serif;
+        }
+        .table-scroll {
+            overflow-x: auto;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            min-width: 840px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(31,29,26,0.08);
+            text-align: left;
+            vertical-align: top;
+            font-size: 0.88rem;
+        }
+        th {
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+        tbody tr:hover {
+            background: rgba(184, 106, 69, 0.03);
+        }
+        .admin-list { display: grid; gap: 12px; }
+        .admin-list > div {
+            display: grid;
+            gap: 4px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(31,29,26,0.08);
+        }
+        .admin-list strong { color: var(--charcoal); }
+        .admin-list span { color: var(--muted); font-size: 0.85rem; }
+        @media (max-width: 980px) {
+            .admin-layout { display: block; }
+            .sidebar { width: 100%; }
+            .sidebar nav { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+            .main-content { padding: 20px 18px 28px; }
+            .stats-grid { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+            .dashboard-panels { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 560px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .header-meta { width: 100%; justify-content: space-between; }
+        }
+    </style>
 </head>
 <body>
     <div class="admin-layout">
@@ -23,7 +247,7 @@ $admin = current_user();
                 <a href="products.php">Products</a>
                 <a href="add-product.php">Add Product</a>
                 <a href="../index.php" target="_blank">View Store</a>
-                <a href="logout.php" style="color: #f87171; margin-top: 30px;">Logout</a>
+                <a href="logout.php" class="logout">Logout</a>
             </nav>
         </aside>
 
@@ -33,7 +257,10 @@ $admin = current_user();
                     <p class="admin-kicker">Commerce Operating System</p>
                     <h1>Dashboard Overview</h1>
                 </div>
-                <span>Welcome, <?= e(first_name($admin)) ?> · Updated <span data-updated-at>--</span></span>
+                <div class="header-meta">
+                    <span class="live-badge">Live</span>
+                    <span>Welcome, <?= e(first_name($admin)) ?> · <span data-updated-at>Last updated --</span></span>
+                </div>
             </div>
 
             <div class="stats-grid">
@@ -117,13 +344,18 @@ $admin = current_user();
         async function refreshDashboard() {
             try {
                 const response = await fetch('dashboard-data.php', { headers: { 'Accept': 'application/json' } });
+                if (!response.ok) {
+                    throw new Error('Dashboard request failed with HTTP ' + response.status);
+                }
                 const data = await response.json();
-                if (!data.ok) return;
+                if (!data.ok) {
+                    throw new Error(data.message || 'Dashboard data is unavailable.');
+                }
                 text('[data-stat="revenue"]', formatInr.format(Number(data.stats.revenue || 0)));
                 text('[data-stat="orders"]', data.stats.orders || 0);
                 text('[data-stat="products"]', data.stats.products || 0);
                 text('[data-stat="customers"]', data.stats.customers || 0);
-                text('[data-updated-at]', data.updated_at || '--');
+                text('[data-updated-at]', 'Last updated ' + (data.updated_at || '--'));
                 renderRows('[data-recent-orders]', data.recent_orders || []);
                 renderList('[data-top-products]', data.top_products || [], 'No product sales yet.', function (item) {
                     return '<div><strong>' + escapeHtml(item.product_name) + '</strong><span>' + escapeHtml(item.units) + ' units · ' + formatInr.format(Number(item.revenue || 0)) + '</span></div>';
@@ -131,13 +363,16 @@ $admin = current_user();
                 renderList('[data-low-stock]', data.low_stock || [], 'No low-stock products.', function (item) {
                     return '<div><strong>' + escapeHtml(item.title) + '</strong><span>' + escapeHtml(item.stock) + ' left</span></div>';
                 });
-            } catch (error) {}
+            } catch (error) {
+                console.error('Unable to refresh dashboard:', error);
+                text('[data-updated-at]', 'Last updated --');
+            }
         }
 
         function startPolling() {
             if (timer) return;
             refreshDashboard();
-            timer = setInterval(refreshDashboard, 7000);
+            timer = setInterval(refreshDashboard, 8000);
         }
 
         function stopPolling() {
