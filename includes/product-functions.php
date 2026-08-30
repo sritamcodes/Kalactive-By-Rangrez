@@ -11,6 +11,16 @@ function db_column_exists(string $table, string $column): bool
 {
     global $conn;
 
+    if (db_driver() === 'sqlite') {
+        $stmt = $conn->query("PRAGMA table_info(" . $table . ")");
+        foreach ($stmt->fetchAll() as $row) {
+            if (($row['name'] ?? '') === $column) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     $stmt = $conn->prepare("SHOW COLUMNS FROM `$table` LIKE ?");
     $stmt->execute([$column]);
     return (bool) $stmt->fetch();
@@ -37,6 +47,19 @@ function ensure_wishlist_schema(): void
 {
     global $conn;
 
+    if (db_driver() === 'sqlite') {
+        $conn->exec("CREATE TABLE IF NOT EXISTS wishlist (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE (user_id, product_id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+        )");
+        return;
+    }
+
     $conn->exec("CREATE TABLE IF NOT EXISTS wishlist (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -57,7 +80,8 @@ function ensure_order_payment_schema(): void
     }
 
     if (!db_column_exists('orders', 'payment_status')) {
-        $conn->exec("ALTER TABLE orders ADD COLUMN payment_status VARCHAR(50) DEFAULT 'Pending' AFTER payment_method");
+        $afterPaymentMethod = db_driver() === 'sqlite' ? '' : ' AFTER payment_method';
+        $conn->exec("ALTER TABLE orders ADD COLUMN payment_status VARCHAR(50) DEFAULT 'Pending'" . $afterPaymentMethod);
     }
 }
 

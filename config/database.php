@@ -55,6 +55,7 @@ define('DB_PORT', db_first_env(['DB_PORT', 'MYSQL_PORT', 'MYSQLPORT', 'MYSQL_ADD
 define('DB_USER', db_first_env(['DB_USER', 'MYSQL_USER', 'MYSQLUSER', 'MYSQL_ADDON_USER'], isset($databaseParts['user']) ? rawurldecode((string) $databaseParts['user']) : 'root'));
 define('DB_PASS', db_first_env(['DB_PASS', 'MYSQL_PASSWORD', 'MYSQLPASSWORD', 'MYSQL_ADDON_PASSWORD'], isset($databaseParts['pass']) ? rawurldecode((string) $databaseParts['pass']) : ''));
 define('DB_NAME', db_first_env(['DB_NAME', 'MYSQL_DATABASE', 'MYSQLDATABASE', 'MYSQL_ADDON_DB'], isset($databaseParts['path']) ? ltrim((string) $databaseParts['path'], '/') : 'ecommerce_db'));
+define('SQLITE_PATH', db_first_env(['SQLITE_PATH', 'SQLITE_DATABASE'], __DIR__ . '/../database/ecommerce.sqlite'));
 
 $conn = null;
 
@@ -74,8 +75,20 @@ if (DB_HOST !== '' && in_array('mysql', PDO::getAvailableDrivers(), true)) {
     }
 }
 
+if (!$conn && in_array('sqlite', PDO::getAvailableDrivers(), true) && is_file(SQLITE_PATH)) {
+    try {
+        $conn = new PDO('sqlite:' . SQLITE_PATH, null, null, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]);
+        $conn->exec('PRAGMA foreign_keys = ON');
+    } catch (PDOException $e) {
+        $conn = null;
+    }
+}
+
 if (!$conn) {
     http_response_code(500);
-    die("Unable to connect to the MySQL store database. Please try again later.");
+    die("Unable to connect to the store database. Please try again later.");
 }
 ?>
