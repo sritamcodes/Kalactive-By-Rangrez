@@ -275,7 +275,7 @@ $pageTitle = "Our Story — KALACTIVE";
         <section class="story-hero">
 
             <img
-                src="https://i.pinimg.com/736x/90/85/33/908533f17d96b78fc481dd53b21aa4f6.jpg"
+                src="./images//image.png"
                 alt="Rajasthani inspired interior"
                 class="absolute inset-0 w-full h-full object-cover story-hero-image"
                 onerror="this.style.display='none';"
