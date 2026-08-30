@@ -6,7 +6,7 @@ if (!is_dir($sessionPath)) {
     mkdir($sessionPath, 0775, true);
 }
 
-if (session_status() === PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
     session_save_path($sessionPath);
     session_set_cookie_params([
         'lifetime' => 0,
@@ -51,6 +51,10 @@ function is_admin(): bool
 
 function login_user(array $user): void
 {
+    if (session_status() === PHP_SESSION_NONE || headers_sent()) {
+        return;
+    }
+
     session_regenerate_id(true);
     foreach (['admin_logged_in', 'admin_user'] as $legacyKey) {
         unset($_SESSION[$legacyKey]);
@@ -65,6 +69,10 @@ function login_user(array $user): void
 
 function logout_user(): void
 {
+    if (session_status() === PHP_SESSION_NONE) {
+        return;
+    }
+
     $_SESSION = [];
     foreach (['admin_logged_in', 'admin_user'] as $legacyKey) {
         unset($_SESSION[$legacyKey]);
