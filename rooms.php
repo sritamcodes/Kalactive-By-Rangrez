@@ -757,7 +757,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
   <h2 class="rp-closing__headline">Every room has something worth discovering.</h2>
   <div class="rp-closing__rule"></div>
   <p class="rp-closing__sub">Begin with the room. Let the objects find you.</p>
-  <a class="btn-secondary" href="index.php">Shop All Objects</a>
+  <a class="btn-secondary" href="products.php">Shop All Objects</a>
 </section>
 
 </main>
