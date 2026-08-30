@@ -1,14 +1,10 @@
 <?php
 require_once __DIR__ . '/../includes/product-functions.php';
 require_once __DIR__ . '/../includes/session.php';
-session_start();
 
-if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: login.php");
-    exit;
-}
+require_admin();
 
-$products = catalogue_products();
+$products = admin_products();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +24,7 @@ $products = catalogue_products();
                 <a href="products.php" class="active">Products</a>
                 <a href="add-product.php">Add Product</a>
                 <a href="../index.php" target="_blank">View Store</a>
-                <a href="login.php" style="color: #f87171; margin-top: 30px;">Logout</a>
+                <a href="logout.php" style="color: #f87171; margin-top: 30px;">Logout</a>
             </nav>
         </aside>
 
@@ -48,6 +44,7 @@ $products = catalogue_products();
                         <th>Price</th>
                         <th>Stock</th>
                         <th>Homepage</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -61,6 +58,7 @@ $products = catalogue_products();
                             <td><?= htmlspecialchars(money_inr($product['price'])) ?></td>
                             <td><?= (int) $product['stock'] ?></td>
                             <td><?= (int) $product['featured'] === 1 ? 'Yes' : 'No' ?></td>
+                            <td><?= (int) $product['active'] === 1 ? 'Active' : 'Inactive' ?></td>
                             <td>
                                 <a href="edit-product.php?id=<?= (int) $product['id'] ?>" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;">Edit</a>
                                 <a href="delete-product.php?id=<?= (int) $product['id'] ?>" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem;" onclick="return confirm('Delete this product?')">Delete</a>

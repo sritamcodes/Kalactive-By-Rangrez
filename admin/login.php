@@ -1,22 +1,33 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/session.php';
-session_start();
+
+if (is_admin()) {
+    header('Location: dashboard.php');
+    exit;
+}
 
 $error = '';
+$email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = trim($_POST['password'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = (string) ($_POST['password'] ?? '');
 
-    // Default admin credential check for starter scaffold
-    if ($username === 'admin' && $password === 'admin123') {
-        $_SESSION['admin_logged_in'] = true;
-        $_SESSION['admin_user'] = 'Admin';
-        header("Location: dashboard.php");
-        exit;
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
+        $error = 'Invalid email or password.';
     } else {
-        $error = 'Invalid admin credentials. (Default: admin / admin123)';
+        $stmt = $conn->prepare("SELECT id, name, email, password, role FROM users WHERE email = ? LIMIT 1");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+
+        if ($user && $user['role'] === 'admin' && password_verify($password, $user['password'])) {
+            login_user($user);
+            header('Location: dashboard.php');
+            exit;
+        }
+
+        $error = 'Invalid email or password.';
     }
 }
 ?>
@@ -25,37 +36,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal Login</title>
+    <title>Admin Login | Kalactive</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="admin-style.css">
 </head>
 <body class="login-body">
     <div class="login-card">
-        <h1 style="font-size: 1.6rem; color: #0f172a; margin-bottom: 8px; text-align: center;">⚙️ Admin Panel</h1>
-        <p style="color: var(--text-muted); text-align: center; margin-bottom: 24px; font-size: 0.95rem;">Enter credentials to access administration</p>
+        <h1>Kalactive Admin</h1>
+        <p>Commerce operations for A Curation by Rangrez</p>
 
         <?php if ($error): ?>
-            <div style="background: #fee2e2; color: var(--danger); padding: 10px; border-radius: 6px; margin-bottom: 16px; font-size: 0.9rem;">
-                <?= htmlspecialchars($error) ?>
-            </div>
+            <div class="admin-alert admin-alert-error"><?= e($error) ?></div>
         <?php endif; ?>
 
         <form action="login.php" method="POST">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control" required placeholder="admin">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required value="<?= e($email) ?>" placeholder="admin1@kalactive.test">
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control" required placeholder="••••••••">
+                <input type="password" id="password" name="password" class="form-control" required placeholder="Password">
             </div>
 
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;">Sign In as Admin</button>
+            <button type="submit" class="btn btn-primary">Sign In as Admin</button>
         </form>
+        <a href="../index.php" class="admin-back-link">Back to store</a>
     </div>
 </body>
 </html>
-
-
-

@@ -1,15 +1,11 @@
 <?php
 require_once __DIR__ . '/../includes/product-functions.php';
 require_once __DIR__ . '/../includes/session.php';
-session_start();
 
-if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: login.php");
-    exit;
-}
+require_admin();
 
 $productId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-$product = $productId > 0 ? find_product($productId) : null;
+$product = $productId > 0 ? find_product($productId, true) : null;
 $categories = all_categories();
 $message = '';
 
@@ -25,12 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
     $description = trim($_POST['description'] ?? '');
     $categoryId = ($_POST['category_id'] ?? '') !== '' ? (int) $_POST['category_id'] : null;
     $featured = isset($_POST['featured']) ? 1 : 0;
+    $active = isset($_POST['active']) ? 1 : 0;
     $imageUrl = trim($_POST['image_url'] ?? '');
     $image = uploaded_product_image($imageUrl !== '' ? $imageUrl : $product['image']);
 
     if ($title !== '' && $price > 0) {
-        $stmt = $conn->prepare("UPDATE products SET category_id = ?, title = ?, slug = ?, description = ?, price = ?, stock = ?, image = ?, featured = ? WHERE id = ?");
-        $stmt->execute([$categoryId, $title, unique_product_slug($title, $productId), $description, $price, $stock, $image, $featured, $productId]);
+        $stmt = $conn->prepare("UPDATE products SET category_id = ?, title = ?, slug = ?, description = ?, price = ?, stock = ?, image = ?, featured = ?, active = ? WHERE id = ?");
+        $stmt->execute([$categoryId, $title, unique_product_slug($title, $productId), $description, $price, max(0, $stock), $image, $featured, $active, $productId]);
         header("Location: products.php?updated=1");
         exit;
     }
@@ -56,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
                 <a href="products.php" class="active">Products</a>
                 <a href="add-product.php">Add Product</a>
                 <a href="../index.php" target="_blank">View Store</a>
-                <a href="login.php" style="color: #f87171; margin-top: 30px;">Logout</a>
+                <a href="logout.php" style="color: #f87171; margin-top: 30px;">Logout</a>
             </nav>
         </aside>
 
@@ -116,6 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
                         <label style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
                             <input type="checkbox" name="featured" value="1" <?= (int) $product['featured'] === 1 ? 'checked' : '' ?>>
                             Show on homepage
+                        </label>
+                        <label style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+                            <input type="checkbox" name="active" value="1" <?= (int) $product['active'] === 1 ? 'checked' : '' ?>>
+                            Active on storefront
                         </label>
 
                         <button type="submit" class="btn btn-primary" style="padding: 12px 24px;">Save Changes</button>

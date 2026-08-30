@@ -1,12 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/product-functions.php';
 require_once __DIR__ . '/../includes/session.php';
-session_start();
 
-if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: login.php");
-    exit;
-}
+require_admin();
 
 $message = '';
 $categories = all_categories();
@@ -22,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image = uploaded_product_image($image);
 
     if ($title !== '' && $price > 0) {
-        $stmt = $conn->prepare("INSERT INTO products (category_id, title, slug, description, price, stock, image, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$categoryId, $title, unique_product_slug($title), $description, $price, $stock, $image, $featured]);
+        $stmt = $conn->prepare("INSERT INTO products (category_id, title, slug, description, price, stock, image, featured, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)");
+        $stmt->execute([$categoryId, $title, unique_product_slug($title), $description, $price, max(0, $stock), $image, $featured]);
         header("Location: products.php?created=1");
         exit;
     }
@@ -49,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a href="products.php">Products</a>
                 <a href="add-product.php" class="active">Add Product</a>
                 <a href="../index.php" target="_blank">View Store</a>
-                <a href="login.php" style="color: #f87171; margin-top: 30px;">Logout</a>
+                <a href="logout.php" style="color: #f87171; margin-top: 30px;">Logout</a>
             </nav>
         </aside>
 

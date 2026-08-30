@@ -1,10 +1,11 @@
 <?php
 require_once __DIR__ . '/includes/product-functions.php';
 require_once __DIR__ . '/includes/session.php';
-session_start();
 
 $productId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $product = $productId > 0 ? find_product($productId) : null;
+$activePage = 'collections';
+$likedProductIds = is_logged_in() ? wishlist_product_ids((int) current_user()['id']) : [];
 
 if (!$product) {
     http_response_code(404);
@@ -12,6 +13,11 @@ if (!$product) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
     $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
+    $quantity = min($quantity, max(0, (int) $product['stock']));
+    if ($quantity <= 0) {
+        header('Location: product.php?id=' . (int) $product['id']);
+        exit;
+    }
     $_SESSION['cart'] ??= [];
     $_SESSION['cart'][$product['id']] = ($_SESSION['cart'][$product['id']] ?? 0) + $quantity;
     header('Location: cart.php');
@@ -28,21 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-[#faf9f5] text-[#1b1c1a] font-[Inter] antialiased">
     <div class="texture-overlay"></div>
-    <header class="border-b border-[#c9c7bd] bg-[#faf9f5]/95">
-        <div class="max-w-[1440px] mx-auto px-5 md:px-16 py-5 flex items-center justify-between">
-            <a href="index.php" class="font-['Playfair_Display'] text-2xl text-[#5f5e58]">कला'ctive</a>
-            <nav class="flex items-center gap-6 text-xs uppercase tracking-widest text-[#5f5e58]">
-                <a href="products.php" class="hover:text-[#974724]">Collections</a>
-                <a href="cart.php" class="hover:text-[#974724]">Cart</a>
-            </nav>
-        </div>
-    </header>
+    <?php include __DIR__ . '/includes/public-nav.php'; ?>
 
-    <main class="max-w-[1440px] mx-auto px-5 md:px-16 py-16 md:py-24">
+    <main class="max-w-[1440px] mx-auto px-5 md:px-16 pt-32 pb-16 md:pb-24">
         <?php if (!$product): ?>
             <h1 class="font-['Playfair_Display'] text-4xl mb-4">Product not found</h1>
             <a href="products.php" class="uppercase tracking-widest text-xs text-[#974724] underline underline-offset-4">Browse collection</a>
@@ -60,11 +59,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
                     <?php endif; ?>
                     <p class="text-sm text-[#78776f] mb-8"><?= (int) $product['stock'] > 0 ? (int) $product['stock'] . ' in stock' : 'Out of stock' ?></p>
 
-                    <form method="POST" class="flex flex-col sm:flex-row gap-4">
-                        <input type="number" name="quantity" min="1" value="1" class="w-24 border-[#c9c7bd] bg-[#faf9f5]" <?= (int) $product['stock'] <= 0 ? 'disabled' : '' ?>>
-                        <button class="btn-primary" type="submit" <?= (int) $product['stock'] <= 0 ? 'disabled' : '' ?>>Add to cart</button>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <form method="POST" class="flex flex-col sm:flex-row gap-4">
+                            <input type="number" name="quantity" min="1" max="<?= (int) $product['stock'] ?>" value="1" class="w-24 border-[#c9c7bd] bg-[#faf9f5]" <?= (int) $product['stock'] <= 0 ? 'disabled' : '' ?>>
+                            <button class="btn-primary" type="submit" <?= (int) $product['stock'] <= 0 ? 'disabled' : '' ?>>Add to cart</button>
+                        </form>
+                        <form method="POST" action="wishlist-toggle.php">
+                            <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                            <input type="hidden" name="redirect" value="product.php?id=<?= (int) $product['id'] ?>">
+                            <button class="btn-secondary" type="submit">
+                                <?= in_array((int) $product['id'], $likedProductIds, true) ? 'Saved' : 'Save' ?>
+                            </button>
+                        </form>
                         <a href="products.php" class="btn-secondary">Continue shopping</a>
-                    </form>
+                    </div>
                 </section>
             </div>
         <?php endif; ?>

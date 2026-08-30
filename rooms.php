@@ -477,24 +477,11 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#e5e2d
 <body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden selection:bg-secondary-container selection:text-on-secondary-container rooms-page" data-mode="connect">
 <div class="texture-overlay"></div>
 
-<!-- NAV — identical to index.php -->
-<nav class="fixed top-0 left-0 w-full flex flex-col justify-center bg-transparent border-b border-transparent z-50 reveal-seq-3 revealed" id="main-nav">
-  <div class="max-w-[1440px] mx-auto w-full px-margin-mobile md:px-margin-desktop py-4 flex items-center justify-between">
-    <div class="hidden md:flex items-center space-x-8">
-      <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="index.php">SHOP</a>
-      <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="products.php">COLLECTIONS</a>
-      <a class="text-secondary border-b border-secondary font-label-lg text-label-lg uppercase tracking-widest opacity-80" href="rooms.php">ROOMS</a>
-      <a class="text-primary font-label-lg text-label-lg uppercase tracking-widest hover:text-secondary transition-colors duration-300" href="story.php">OUR STORY</a>
-    </div>
-    <a class="font-headline-lg text-headline-lg tracking-tighter text-primary" href="index.php">कला'ctive</a>
-    <div class="flex items-center space-x-6">
-      <button class="text-primary hover:text-secondary transition-colors"><span class="material-symbols-outlined">favorite</span></button>
-      <button class="text-primary hover:text-secondary transition-colors"><span class="material-symbols-outlined">shopping_bag</span></button>
-      <button class="text-primary hover:text-secondary transition-colors"><span class="material-symbols-outlined">person</span></button>
-      <button class="md:hidden text-primary hover:text-secondary transition-colors"><span class="material-symbols-outlined">menu</span></button>
-    </div>
-  </div>
-</nav>
+<?php
+$activePage = 'rooms';
+require_once __DIR__ . '/includes/session.php';
+include __DIR__ . '/includes/public-nav.php';
+?>
 
 <main>
 

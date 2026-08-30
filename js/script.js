@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const heroContent = document.getElementById('hero-content');
 
             // Ensure muted hero video starts when the browser allows autoplay.
-            if (heroBg) {
+            if (heroBg && window.matchMedia('(min-width: 768px)').matches) {
                 heroBg.muted = true;
                 heroBg.play().catch(() => {});
             }
@@ -46,16 +46,34 @@ document.addEventListener("DOMContentLoaded", () => {
             const mobileMenu = document.querySelector('[data-mobile-menu]');
 
             if (mobileMenuButton && mobileMenu) {
+                const closeMobileMenu = () => {
+                    mobileMenu.classList.remove('open');
+                    document.body.classList.remove('mobile-menu-open');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                };
+
                 mobileMenuButton.addEventListener('click', () => {
                     const isOpen = mobileMenu.classList.toggle('open');
                     mobileMenuButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                    document.body.classList.toggle('mobile-menu-open', isOpen);
                 });
 
                 mobileMenu.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => {
-                        mobileMenu.classList.remove('open');
-                        mobileMenuButton.setAttribute('aria-expanded', 'false');
+                        closeMobileMenu();
                     });
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!mobileMenu.classList.contains('open')) return;
+                    if (mobileMenu.contains(event.target) || mobileMenuButton.contains(event.target)) return;
+                    closeMobileMenu();
+                });
+
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        closeMobileMenu();
+                    }
                 });
             }
 

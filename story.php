@@ -1,5 +1,7 @@
 <?php
+require_once __DIR__ . '/includes/session.php';
 $pageTitle = "Our Story — KALACTIVE";
+$activePage = 'story';
 ?>
 
 <!DOCTYPE html>
@@ -187,83 +189,7 @@ $pageTitle = "Our Story — KALACTIVE";
     <!-- Existing texture treatment -->
     <div class="texture-overlay"></div>
 
-    <!-- =====================================================
-         NAVIGATION
-         ===================================================== -->
-
-    <nav
-        id="main-nav"
-        class="fixed top-0 left-0 w-full z-50 bg-transparent border-b border-transparent transition-all duration-500"
-    >
-        <div class="max-w-[1440px] mx-auto px-5 md:px-16 py-4 flex items-center justify-between">
-
-            <!-- Left -->
-            <div class="hidden md:flex items-center gap-8">
-
-                <a
-                    href="products.php"
-                    class="text-sm uppercase tracking-[0.18em] text-[#1b1c1a] hover:text-[#974724] transition-colors"
-                >
-                    SHOP
-                </a>
-
-                <a
-                    href="products.php"
-                    class="text-sm uppercase tracking-[0.18em] text-[#1b1c1a] hover:text-[#974724] transition-colors"
-                >
-                    COLLECTIONS
-                </a>
-
-                <a
-                    href="rooms.php"
-                    class="text-sm uppercase tracking-[0.18em] text-[#1b1c1a] hover:text-[#974724] transition-colors"
-                >
-                    ROOMS
-                </a>
-
-                <a
-                    href="story.php"
-                    class="text-sm uppercase tracking-[0.18em] text-[#974724] border-b border-[#974724] pb-1"
-                >
-                    OUR STORY
-                </a>
-
-            </div>
-
-            <!-- Brand -->
-            <a
-                href="index.php"
-                class="font-display text-3xl md:text-4xl tracking-tight text-[#1b1c1a]"
-            >
-                कला'ctive
-            </a>
-
-            <!-- Right -->
-            <div class="flex items-center gap-5">
-
-                <a href="wishlist.php" aria-label="Wishlist" class="text-[#1b1c1a] hover:text-[#974724] transition-colors">
-                    <span class="material-symbols-outlined">favorite</span>
-                </a>
-
-                <a href="cart.php" aria-label="Shopping cart" class="text-[#1b1c1a] hover:text-[#974724] transition-colors">
-                    <span class="material-symbols-outlined">shopping_bag</span>
-                </a>
-
-                <a href="./admin/login.php" aria-label="Account" class="text-[#1b1c1a] hover:text-[#974724] transition-colors">
-                    <span class="material-symbols-outlined">person</span>
-                </a>
-
-                <button
-                    id="mobile-menu-button"
-                    class="md:hidden text-[#1b1c1a]"
-                    aria-label="Open menu"
-                >
-                    <span class="material-symbols-outlined">menu</span>
-                </button>
-
-            </div>
-        </div>
-    </nav>
+    <?php include __DIR__ . '/includes/public-nav.php'; ?>
 
 
     <main>

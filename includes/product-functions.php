@@ -30,6 +30,10 @@ function ensure_product_schema(): void
 {
     global $conn;
 
+    if (!db_column_exists('products', 'active')) {
+        $conn->exec("ALTER TABLE products ADD COLUMN active TINYINT NOT NULL DEFAULT 1");
+    }
+
     if (!db_column_exists('products', 'featured')) {
         $conn->exec("ALTER TABLE products ADD COLUMN featured TINYINT NOT NULL DEFAULT 0");
         $conn->exec("UPDATE products SET featured = 1 WHERE id IN (1, 2, 3, 4)");
@@ -37,6 +41,32 @@ function ensure_product_schema(): void
         $conn->exec("UPDATE products SET price = 8900.00 WHERE id = 3");
         $conn->exec("UPDATE products SET price = 2200.00 WHERE id = 4");
     }
+}
+
+function ensure_wishlist_schema(): void
+{
+    global $conn;
+
+    if (db_driver() === 'sqlite') {
+        $conn->exec("CREATE TABLE IF NOT EXISTS wishlist (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id, product_id)
+        )");
+        return;
+    }
+
+    $conn->exec("CREATE TABLE IF NOT EXISTS wishlist (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        product_id INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE KEY unique_wishlist_product (user_id, product_id),
+        CONSTRAINT fk_wishlist_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        CONSTRAINT fk_wishlist_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 
 function product_slug(string $title): string
@@ -111,17 +141,70 @@ function catalogue_products(): array
 {
     global $conn;
     ensure_product_schema();
-    return $conn->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY p.id")->fetchAll();
+    return $conn->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.active = 1 ORDER BY p.id")->fetchAll();
 }
 
-function find_product(int $id): ?array
+function admin_products(): array
 {
     global $conn;
     ensure_product_schema();
-    $stmt = $conn->prepare("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.id = ?");
+    return $conn->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY p.id DESC")->fetchAll();
+}
+
+function find_product(int $id, bool $includeInactive = false): ?array
+{
+    global $conn;
+    ensure_product_schema();
+    $sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.id = ?";
+    if (!$includeInactive) {
+        $sql .= " AND p.active = 1";
+    }
+    $stmt = $conn->prepare($sql);
     $stmt->execute([$id]);
     $product = $stmt->fetch();
     return $product ?: null;
+}
+
+function cart_items(): array
+{
+    $_SESSION['cart'] ??= [];
+    $items = [];
+    $subtotal = 0.0;
+
+    foreach ($_SESSION['cart'] as $id => $quantity) {
+        $product = find_product((int) $id);
+        $quantity = max(1, (int) $quantity);
+        if (!$product || (int) $product['stock'] <= 0) {
+            unset($_SESSION['cart'][$id]);
+            continue;
+        }
+        $quantity = min($quantity, (int) $product['stock']);
+        $_SESSION['cart'][(int) $product['id']] = $quantity;
+        $lineTotal = (float) $product['price'] * $quantity;
+        $items[] = ['product' => $product, 'quantity' => $quantity, 'total' => $lineTotal];
+        $subtotal += $lineTotal;
+    }
+
+    $shipping = $subtotal > 0 && $subtotal < 5000 ? 250.0 : 0.0;
+    return ['items' => $items, 'subtotal' => $subtotal, 'shipping' => $shipping, 'total' => $subtotal + $shipping];
+}
+
+function wishlist_product_ids(int $userId): array
+{
+    global $conn;
+    ensure_wishlist_schema();
+    $stmt = $conn->prepare("SELECT product_id FROM wishlist WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    return array_map('intval', array_column($stmt->fetchAll(), 'product_id'));
+}
+
+function wishlist_products(int $userId): array
+{
+    global $conn;
+    ensure_wishlist_schema();
+    $stmt = $conn->prepare("SELECT p.*, c.name AS category_name FROM wishlist w INNER JOIN products p ON p.id = w.product_id LEFT JOIN categories c ON c.id = p.category_id WHERE w.user_id = ? AND p.active = 1 ORDER BY w.created_at DESC");
+    $stmt->execute([$userId]);
+    return $stmt->fetchAll();
 }
 
 function uploaded_product_image(?string $currentImage = null): ?string
