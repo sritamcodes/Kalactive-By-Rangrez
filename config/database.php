@@ -33,6 +33,37 @@ function db_first_env(array $keys, string $default = ''): string
     return $default;
 }
 
+function ensure_default_admin_users(PDO $conn): void
+{
+    $admins = [
+        ['name' => 'Kalactive Admin', 'email' => 'admin1@kalactive.test', 'password' => 'KalactiveAdmin1!'],
+        ['name' => 'Rangrez Admin', 'email' => 'admin2@kalactive.test', 'password' => 'RangrezAdmin2!'],
+    ];
+
+    foreach ($admins as $admin) {
+        $existing = $conn->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+        $existing->execute([':email' => $admin['email']]);
+
+        $hash = password_hash($admin['password'], PASSWORD_DEFAULT);
+
+        if ($existing->fetch()) {
+            $stmt = $conn->prepare('UPDATE users SET name = :name, password = :password, role = "admin" WHERE email = :email');
+            $stmt->execute([
+                ':name' => $admin['name'],
+                ':password' => $hash,
+                ':email' => $admin['email'],
+            ]);
+        } else {
+            $stmt = $conn->prepare('INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, "admin")');
+            $stmt->execute([
+                ':name' => $admin['name'],
+                ':email' => $admin['email'],
+                ':password' => $hash,
+            ]);
+        }
+    }
+}
+
 $databaseUrl = db_first_env(['DATABASE_URL', 'MYSQL_URL', 'MYSQL_PUBLIC_URL', 'MYSQL_PRIVATE_URL', 'CLEARDB_DATABASE_URL', 'JAWSDB_URL']);
 $databaseParts = $databaseUrl !== '' ? parse_url($databaseUrl) : [];
 if (!is_array($databaseParts)) {
@@ -96,5 +127,11 @@ if (!$conn) {
     error_log('Database connection failed: ' . $connectionError);
     http_response_code(500);
     die("Unable to connect to the store database. Please try again later.");
+}
+
+try {
+    ensure_default_admin_users($conn);
+} catch (PDOException $e) {
+    error_log('Admin user seed failed: ' . $e->getMessage());
 }
 ?>
