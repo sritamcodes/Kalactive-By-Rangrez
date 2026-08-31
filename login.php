@@ -2,8 +2,42 @@
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/includes/session.php';
 
-if (is_logged_in()) {
-    header('Location: index.php');
+function sanitize_redirect_url(?string $url): string
+{
+    if ($url === null || $url === '') {
+        return 'index.php';
+    }
+
+    $url = trim($url);
+
+    if (preg_match('/^(?:[a-z]+:)?\/\//i', $url) || str_starts_with($url, '\\') || str_starts_with($url, 'javascript:')) {
+        return 'index.php';
+    }
+
+    $allowed = [
+        'checkout.php',
+        'cart.php',
+        'index.php',
+        'wishlist.php',
+        'products.php',
+        'rooms.php',
+        'story.php',
+    ];
+
+    $path = parse_url($url, PHP_URL_PATH) ?? '';
+    if (in_array($path, $allowed, true)) {
+        return $url;
+    }
+
+    return 'index.php';
+}
+
+$rawRedirect = trim((string) ($_GET['redirect'] ?? $_POST['redirect'] ?? ''));
+$targetRedirect = sanitize_redirect_url($rawRedirect);
+
+$customer = get_authenticated_customer($conn);
+if ($customer !== null) {
+    header('Location: ' . $targetRedirect);
     exit;
 }
 
@@ -23,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user && $user['role'] === 'customer' && password_verify($password, $user['password'])) {
             login_user($user);
-            header('Location: index.php');
+            header('Location: ' . $targetRedirect);
             exit;
         }
 
@@ -49,6 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1 class="font-['Playfair_Display'] text-4xl mb-6">Login</h1>
             <?php if ($error): ?><div class="border border-[#974724]/40 bg-[#ffdbce]/40 text-[#772f0d] p-3 mb-5"><?= e($error) ?></div><?php endif; ?>
             <form method="POST" class="space-y-5">
+                <?php if ($rawRedirect !== ''): ?>
+                    <input type="hidden" name="redirect" value="<?= e($rawRedirect) ?>">
+                <?php endif; ?>
                 <input class="w-full border-[#c9c7bd] bg-[#faf9f5]" type="email" name="email" placeholder="Email" value="<?= e($email) ?>" required>
                 <input class="w-full border-[#c9c7bd] bg-[#faf9f5]" type="password" name="password" placeholder="Password" required>
                 <button class="btn-primary w-full" type="submit">Login</button>

@@ -35,7 +35,10 @@ function e(?string $value): string
 
 function current_user(): ?array
 {
-    return isset($_SESSION['user']) && is_array($_SESSION['user']) ? $_SESSION['user'] : null;
+    if (isset($_SESSION['user']) && is_array($_SESSION['user']) && !empty($_SESSION['user']['id'])) {
+        return $_SESSION['user'];
+    }
+    return null;
 }
 
 function is_logged_in(): bool
@@ -47,6 +50,49 @@ function is_admin(): bool
 {
     $user = current_user();
     return ($user['role'] ?? '') === 'admin';
+}
+
+function get_authenticated_customer(?PDO $conn = null): ?array
+{
+    $user = current_user();
+    if (!$user || !isset($user['id']) || (int) $user['id'] <= 0 || ($user['role'] ?? '') !== 'customer') {
+        return null;
+    }
+
+    if ($conn instanceof PDO) {
+        try {
+            $stmt = $conn->prepare("SELECT id, name, email, role FROM users WHERE id = ? AND role = 'customer' LIMIT 1");
+            $stmt->execute([(int) $user['id']]);
+            $dbUser = $stmt->fetch();
+            if (!$dbUser) {
+                unset($_SESSION['user']);
+                return null;
+            }
+            return [
+                'id' => (int) $dbUser['id'],
+                'name' => (string) $dbUser['name'],
+                'email' => (string) $dbUser['email'],
+                'role' => (string) $dbUser['role'],
+            ];
+        } catch (PDOException $e) {
+            error_log('Customer auth DB verification failed: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    return $user;
+}
+
+function require_customer(PDO $conn, string $redirect = 'checkout.php'): array
+{
+    $customer = get_authenticated_customer($conn);
+    if ($customer === null) {
+        $query = $redirect !== '' ? '?redirect=' . urlencode($redirect) : '';
+        header('Location: login.php' . $query);
+        exit;
+    }
+
+    return $customer;
 }
 
 function login_user(array $user): void

@@ -2,13 +2,17 @@
 require_once __DIR__ . '/includes/product-functions.php';
 require_once __DIR__ . '/includes/session.php';
 
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+
+$user = require_customer($conn, 'checkout.php');
+
 $_SESSION['cart'] ??= [];
 $cart = cart_items();
 $items = $cart['items'];
 $orderPlaced = false;
 $orderId = null;
 $error = '';
-$user = current_user();
 
 $name = $user['name'] ?? '';
 $email = $user['email'] ?? '';
@@ -52,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $items) {
             }
 
             $stmt = $conn->prepare("INSERT INTO orders (user_id, customer_name, customer_email, customer_address, total_amount, payment_method, payment_status, status) VALUES (?, ?, ?, ?, ?, ?, 'Pending', 'pending')");
-            $stmt->execute([$user['id'] ?? null, $name, $email, $address, $freshCart['total'], $paymentMethod]);
+            $stmt->execute([(int) $user['id'], $name, $email, $address, $freshCart['total'], $paymentMethod]);
             $orderId = (int) $conn->lastInsertId();
 
             $itemStmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, price, quantity, total) VALUES (?, ?, ?, ?, ?, ?)");
